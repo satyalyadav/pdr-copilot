@@ -82,7 +82,7 @@ export function FrameViewer({
             alt={
               changeView
                 ? 'Cyan marks show changed pixels between synthetic captures.'
-                : 'Amber points mark stripe departures from a fitted reference.'
+                : 'Yellow-orange dots mark where stripes bend away from a fitted straight line.'
             }
             draggable={false}
           />
@@ -96,16 +96,18 @@ export function FrameViewer({
             height: `${active.height * 100}%`,
           }}
         >
-          <span>Inspection region</span>
+          <span>Inspection area</span>
         </div>
       </div>
       <div className="viewer-caption">
-        <span className="legend-dot" />{' '}
-        {overlay
-          ? changeView
-            ? 'Cyan marks show changed pixels, not repair progress.'
-            : 'Amber marks show image evidence, not tool positions.'
-          : 'Original image. Overlay hidden.'}
+        {analysis && overlay && <span className={`legend-dot ${changeView ? 'changes' : ''}`} />}{' '}
+        {!analysis
+          ? 'Click Assess image to add yellow-orange dots where the stripes bend.'
+          : overlay
+            ? changeView
+              ? 'Cyan marks show changed pixels, not repair progress.'
+              : 'Yellow-orange dots show where stripes bend away from a fitted straight line.'
+            : 'Bend markers are hidden. Click Highlight bends to show them.'}
       </div>
     </div>
   )

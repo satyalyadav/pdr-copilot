@@ -22,12 +22,12 @@ The configured default is DeepSeek V4.1 Flash through OpenCode Go's subscription
 
 ## Try the loop
 
-1. Select **Initial reflection**, then **Assess image**. Amber points show stripe departures from fitted straight references. Open the explanation beneath the pixel measurements.
-2. Request OpenCode guidance if configured, inspect each citation, and record a note. **Record this assessment** adds an immutable record to the current tab's session.
-3. Select **After illustrative adjustment**, confirm the previous capture, then assess again. The fixture's camera and light settings are known. A cyan changed-pixel overlay and a paired bar chart describe the visible difference. Its changing stripe warp is predetermined and does not model a physical repair.
-4. Try **Unchanged control**, **Camera moved**, and **Light moved**. Identical pixels show no change. Known synthetic motion blocks comparison.
-5. Add your own PNG, JPEG, or WebP photos. Use **Select region** to drag a rectangle, or use the keyboard sliders. All changed uploaded comparisons remain unverified because the prototype cannot independently observe camera and light pose.
-6. Export the recorded assessments as JSON for expert review. Records live in browser memory and disappear on reload. Exports contain the analyzed, resized images and overlays, guidance provenance, sources, selections, and technician notes. Original upload files are not retained on the server or included in the export.
+1. Select **Initial reflection**, then **Assess image**. Yellow-orange dots mark where stripes bend away from fitted straight lines. Open the explanation beneath the pixel measurements.
+2. Request OpenCode guidance if configured, inspect each citation, and record a note. **Save assessment** adds an immutable record to the current tab's session.
+3. Select **Less stripe bending**, confirm the previous capture, then assess again. The fixture's camera and light settings are known. A cyan changed-pixel overlay and a paired bar chart describe the visible difference. Its changing stripe warp is predetermined and does not model a physical repair.
+4. Try **Same image again**, **Camera moved**, and **Light moved**. Identical pixels show no change. Known synthetic motion blocks comparison.
+5. Add your own PNG, JPEG, or WebP photos. Use **Choose area** to drag a rectangle, or use the keyboard sliders. All changed uploaded comparisons remain unverified because the prototype cannot independently observe camera and light pose.
+6. Download the saved assessments as JSON for expert review. Records live in browser memory and disappear on reload. Exports contain the analyzed, resized images and overlays, guidance provenance, sources, selections, and technician notes. Original upload files are not retained on the server or included in the export.
 
 Up to 12 uploads per session, 12 MB each, and 20 million pixels per image. Images must be at least 64 pixels wide and tall. Analysis resizes images to fit 960 by 720 pixels. Equality and dimension checks use the original decoded images before resizing. Pixel measurements refer to that resized image. The overlay expects near-vertical continuous bright stripes. General dent photos can produce insufficient evidence, and ordinary body curvature can produce stripe residuals.
 

@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 import {
   ArrowDownToLine,
   Check,
-  CircleHelp,
   Eye,
   Focus,
   ImagePlus,
@@ -10,15 +9,21 @@ import {
   LoaderCircle,
   RotateCcw,
   ScanLine,
-  ShieldCheck,
 } from 'lucide-react'
 import { ChangeSummary } from './ChangeSummary'
 import { FrameViewer } from './FrameViewer'
 import { GuidancePanel } from './GuidancePanel'
 import { captureForm, request } from './api'
+import { demoDescriptions } from './demoDescriptions'
 import type { Analysis, Capture, Demo, Guidance, Region, SessionEntry } from './types'
 
 const initialRegion: Region = { x: 0.28, y: 0.22, width: 0.44, height: 0.56 }
+const regionLabels = {
+  x: 'Left position',
+  y: 'Top position',
+  width: 'Box width',
+  height: 'Box height',
+}
 const statusNames: Record<Analysis['comparison']['status'], string> = {
   not_requested: 'First assessment',
   unchanged: 'Identical image',
@@ -34,7 +39,7 @@ export function App() {
   const [region, setRegion] = useState<Region>(initialRegion)
   const [analysis, setAnalysis] = useState<Analysis | null>(null)
   const [guidance, setGuidance] = useState<Guidance | null>(null)
-  const [zen, setZen] = useState({ configured: false, model: '' })
+  const [zenConfigured, setZenConfigured] = useState(false)
   const [busy, setBusy] = useState<'assessment' | 'zen' | null>(null)
   const [error, setError] = useState('')
   const [changeView, setChangeView] = useState(false)
@@ -43,7 +48,6 @@ export function App() {
   const [note, setNote] = useState('')
   const [entries, setEntries] = useState<SessionEntry[]>([])
   const [saved, setSaved] = useState(false)
-  const [showProtocol, setShowProtocol] = useState(false)
   const [showBaseline, setShowBaseline] = useState(false)
   const sessionId = useRef(crypto.randomUUID())
   const upload = useRef<HTMLInputElement>(null)
@@ -58,19 +62,20 @@ export function App() {
       try {
         const [demos, health] = await Promise.all([
           request<Demo[]>('/api/demo', { signal: abort.signal }),
-          request<{ zen_configured: boolean; model: string }>('/api/health', {
+          request<{ zen_configured: boolean }>('/api/health', {
             signal: abort.signal,
           }),
         ])
         setCaptures((current) => [
           ...demos.map((item) => ({
             ...item,
+            ...demoDescriptions[item.id],
             demoId: item.id,
             timestamp: new Date().toISOString(),
           })),
           ...current.filter((item) => item.file),
         ])
-        setZen({ configured: health.zen_configured, model: health.model })
+        setZenConfigured(health.zen_configured)
       } catch (err) {
         if (!abort.signal.aborted)
           setError(err instanceof Error ? err.message : 'Start the backend and reload this page.')
@@ -229,19 +234,6 @@ export function App() {
             PDR <strong>inspection copilot</strong>
           </span>
         </a>
-        <div className="header-actions">
-          <span className={`connection ${zen.configured ? 'ready' : ''}`}>
-            <i />
-            {zen.configured ? 'OpenCode configured' : 'Local guidance available'}
-          </span>
-          <button
-            className="button quiet"
-            onClick={() => setShowProtocol((value) => !value)}
-            aria-expanded={showProtocol}
-          >
-            <CircleHelp size={16} /> Capture guide
-          </button>
-        </div>
       </header>
       <main>
         <div className="page-intro">
@@ -253,38 +245,7 @@ export function App() {
             </h1>
             <p>Assess, record an adjustment, then reassess the visible evidence.</p>
           </div>
-          <div className="prototype-tag">
-            <ShieldCheck size={18} />
-            <span>
-              Interview prototype
-              <br />
-              <strong>Physical corrections unvalidated</strong>
-            </span>
-          </div>
         </div>
-        {showProtocol && (
-          <section className="protocol" aria-label="Capture guide">
-            <h2>Capture a useful reflection</h2>
-            <ol>
-              <li>
-                Show continuous, near-vertical bright stripes over the inspection region. Reduce
-                glare and remove obstructions.
-              </li>
-              <li>
-                Fix the camera, panel, and light. Keep focus and exposure consistent. Record camera
-                and light positions independently.
-              </li>
-              <li>
-                Uploaded comparisons remain unverified. Confirm model year, panel material, paint
-                inspection, and current OEM procedures before any physical work.
-              </li>
-            </ol>
-            <p>
-              Synthetic frames are predetermined stripe warps. They are not an optical or
-              metal-deformation simulation.
-            </p>
-          </section>
-        )}
         {error && (
           <div className="error" role="alert">
             {error}
@@ -318,14 +279,30 @@ export function App() {
                 }}
               />
             </div>
+            <p className="image-explainer">
+              {capture?.demoId
+                ? 'This generated image imitates bright lines reflected on a panel. The lines bend near the center. The outer frame and corner squares are reference marks; the smaller box is your inspection area.'
+                : 'The box marks the area of your photo to inspect. Choose an area with visible reflection stripes.'}
+            </p>
             <div className="image-tools">
               <div className="tool-group">
                 <button
-                  className={`tool ${overlay ? 'active' : ''}`}
-                  aria-pressed={overlay}
-                  onClick={() => setOverlay((value) => !value)}
+                  className={`tool ${analysis && overlay && !changeView ? 'active' : ''}`}
+                  aria-pressed={!!analysis && overlay && !changeView}
+                  disabled={!analysis}
+                  title={
+                    analysis
+                      ? 'Show or hide the yellow-orange bend markers'
+                      : 'Click Assess image first'
+                  }
+                  onClick={() => {
+                    if (changeView) {
+                      setChangeView(false)
+                      setOverlay(true)
+                    } else setOverlay((value) => !value)
+                  }}
                 >
-                  <Layers2 size={15} /> Overlay
+                  <Layers2 size={15} /> Highlight bends
                 </button>
                 {analysis?.change_overlay && (
                   <button
@@ -336,7 +313,7 @@ export function App() {
                       setOverlay(true)
                     }}
                   >
-                    Changed pixels
+                    Highlight changes
                   </button>
                 )}
                 <button
@@ -345,12 +322,13 @@ export function App() {
                   disabled={!!busy}
                   onClick={() => setSelecting((value) => !value)}
                 >
-                  <Focus size={15} /> Select region
+                  <Focus size={15} /> Choose area
                 </button>
                 <button
                   className="tool"
                   disabled={!!busy}
                   aria-label="Reset inspection region"
+                  title="Reset the inspection box to its starting position and size"
                   onClick={() => updateRegion(initialRegion)}
                 >
                   <RotateCcw size={15} />
@@ -360,6 +338,11 @@ export function App() {
                 {selecting ? 'Drag a rectangle over the image' : 'Vertical stripe inspection'}
               </span>
             </div>
+            <p className="inspection-help">
+              {selecting
+                ? 'Drag a box around the stripes you want to inspect. Then click Assess image.'
+                : 'Choose area lets you draw the inspection box. Highlight bends shows or hides the dots after assessment.'}
+            </p>
             {capture && (
               <FrameViewer
                 capture={capture}
@@ -376,11 +359,12 @@ export function App() {
               />
             )}
             <details className="region-controls">
-              <summary>Adjust the region with keyboard controls</summary>
+              <summary>Move or resize the inspection box</summary>
+              <p>Use the sliders or arrow keys. Percentages are relative to the image.</p>
               <div>
                 {(['x', 'y', 'width', 'height'] as const).map((key) => (
                   <label key={key}>
-                    {key}
+                    {regionLabels[key]}
                     <input
                       type="range"
                       min={key === 'width' || key === 'height' ? 5 : 0}
@@ -450,9 +434,7 @@ export function App() {
             )}
             <div className="assess-row">
               <span>
-                The selection localizes an inspection.
-                <br />
-                It does not identify a push or pull point.
+                Assess the stripes inside the box to add bend markers and inspection guidance.
               </span>
               <button
                 className="button primary"
@@ -471,7 +453,7 @@ export function App() {
           <GuidancePanel
             analysis={analysis}
             guidance={guidance}
-            zen={zen}
+            zenConfigured={zenConfigured}
             busy={busy}
             onZen={() => void assess('zen')}
           />
@@ -480,10 +462,14 @@ export function App() {
           <div className="sequence-heading">
             <div>
               <h2>Assess. Adjust. Reassess.</h2>
-              <p>Replay illustrative inputs or add a capture after a technician's adjustment.</p>
+              <p>Click an image to load it above, then click Assess image.</p>
             </div>
-            <span>Replay does not establish AI-caused outcomes.</span>
           </div>
+          <p className="sequence-explainer">
+            The first three generated images show the same pattern with progressively less bending.
+            The next three check what happens when nothing changes, the camera moves, or the light
+            moves. Add your own photos to follow an actual repair.
+          </p>
           <div className="capture-strip">
             {captures.map((item, index) => (
               <button
@@ -496,11 +482,15 @@ export function App() {
                 <div>
                   <img src={item.url} alt="" />
                   <span>
-                    {item.demoId ? (index < 3 ? `Stage ${index + 1}` : 'Control') : 'Upload'}
+                    {item.demoId
+                      ? index < 3
+                        ? `Demo step ${index + 1}`
+                        : 'Comparison check'
+                      : 'Upload'}
                   </span>
                 </div>
                 <strong>{item.title}</strong>
-                <small>{item.demoId ? 'Computer-generated' : 'Your photo'}</small>
+                <small>{item.demoId ? item.note : 'Your photo'}</small>
               </button>
             ))}
             <button
@@ -519,22 +509,29 @@ export function App() {
             <div className="guidance-heading">
               <span className="step-marker">3</span>
               <div>
-                <h2>Record and reassess</h2>
-                <p>Keep the technician's action separate from the image evidence.</p>
+                <h2>Save this assessment</h2>
+                <p>
+                  Keep the current image, results, and any notes before moving to the next photo.
+                </p>
               </div>
             </div>
-            <label htmlFor="technician-note">Technician's adjustment or reviewer note</label>
+            <label htmlFor="technician-note">
+              Optional notes about this image or what you did between photos
+            </label>
             <textarea
               id="technician-note"
               value={note}
-              placeholder="Record what happened, or mark a proposed step as hypothetical."
+              placeholder="For example: Took a second photo with the same camera and light positions."
               rows={3}
               onChange={(event) => {
                 setNote(event.target.value)
                 setSaved(false)
               }}
             />
-            <p>Records stay in this tab until exported. Reloading clears them.</p>
+            <p>
+              Notes are saved with the image and results. Download saved assessments to keep them;
+              reloading clears this tab.
+            </p>
           </div>
           <div className="session-actions">
             <button
@@ -543,21 +540,13 @@ export function App() {
               onClick={saveAssessment}
             >
               {saved ? <Check size={16} /> : <ArrowDownToLine size={16} />}
-              {saved ? 'Assessment recorded' : 'Record this assessment'}
+              {saved ? 'Assessment saved' : 'Save assessment'}
             </button>
             <button className="button quiet" disabled={!entries.length} onClick={exportSession}>
-              <ArrowDownToLine size={16} /> Export session ({entries.length})
+              <ArrowDownToLine size={16} /> Download saved assessments ({entries.length})
             </button>
           </div>
         </section>
-        <footer>
-          <ShieldCheck size={16} />
-          <p>
-            Inspection assistance only. No depth, high/low sign, tool placement, force,
-            repair-quality score, or OEM compliance is established. Expert review is the next
-            validation step.
-          </p>
-        </footer>
       </main>
     </div>
   )

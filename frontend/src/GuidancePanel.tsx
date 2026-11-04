@@ -4,13 +4,13 @@ import type { Analysis, Guidance } from './types'
 export function GuidancePanel({
   analysis,
   guidance,
-  zen,
+  zenConfigured,
   busy,
   onZen,
 }: {
   analysis: Analysis | null
   guidance: Guidance | null
-  zen: { configured: boolean; model: string }
+  zenConfigured: boolean
   busy: string | null
   onZen: () => void
 }) {
@@ -41,7 +41,7 @@ export function GuidancePanel({
             </div>
           </dl>
           <details className="method">
-            <summary>How to read the overlay</summary>
+            <summary>How the dots are calculated</summary>
             <p>
               {analysis.observation.reference} This pixel proxy is not depth or a repair-quality
               score.
@@ -51,7 +51,7 @@ export function GuidancePanel({
       ) : (
         <div className="empty-evidence">
           <ScanLine size={31} />
-          <p>Choose an input and assess the image to highlight visible stripe departures.</p>
+          <p>Click Assess image to find and highlight bends in the stripes inside your box.</p>
         </div>
       )}
       <div className="guidance-divider" />
@@ -100,17 +100,17 @@ export function GuidancePanel({
       )}
       <button
         className="button zen-button"
-        disabled={!analysis || !!busy || !zen.configured}
+        disabled={!analysis || !!busy || !zenConfigured}
         onClick={onZen}
       >
         {busy === 'zen' ? <LoaderCircle size={17} className="spin" /> : <Sparkles size={17} />}
         {busy === 'zen' ? 'Reviewing image' : 'Send image to OpenCode'}
       </button>
-      <p className="privacy-note">
-        {zen.configured
-          ? `Uses ${zen.model}. Sends this image, the selection, and curated sources to OpenCode. No automatic requests.`
-          : 'Add OPENCODE_API_KEY to the backend .env file and restart to enable live image review.'}
-      </p>
+      {!zenConfigured && (
+        <p className="privacy-note">
+          AI image review is unavailable until the model connection is set up.
+        </p>
+      )}
       {guidance && (
         <details className="source-library">
           <summary>Read the source passages</summary>
