@@ -12,6 +12,7 @@ import {
   ScanLine,
   ShieldCheck,
 } from 'lucide-react'
+import { ChangeSummary } from './ChangeSummary'
 import { FrameViewer } from './FrameViewer'
 import { GuidancePanel } from './GuidancePanel'
 import { captureForm, request } from './api'
@@ -36,6 +37,7 @@ export function App() {
   const [zen, setZen] = useState({ configured: false, model: '' })
   const [busy, setBusy] = useState<'assessment' | 'zen' | null>(null)
   const [error, setError] = useState('')
+  const [changeView, setChangeView] = useState(false)
   const [overlay, setOverlay] = useState(true)
   const [selecting, setSelecting] = useState(false)
   const [note, setNote] = useState('')
@@ -60,9 +62,14 @@ export function App() {
             signal: abort.signal,
           }),
         ])
-        setCaptures(
-          demos.map((item) => ({ ...item, demoId: item.id, timestamp: new Date().toISOString() })),
-        )
+        setCaptures((current) => [
+          ...demos.map((item) => ({
+            ...item,
+            demoId: item.id,
+            timestamp: new Date().toISOString(),
+          })),
+          ...current.filter((item) => item.file),
+        ])
         setZen({ configured: health.zen_configured, model: health.model })
       } catch (err) {
         if (!abort.signal.aborted)
@@ -82,6 +89,7 @@ export function App() {
 
   function clearResult() {
     controller.current?.abort()
+    setChangeView(false)
     setAnalysis(null)
     setGuidance(null)
     setError('')
@@ -319,6 +327,18 @@ export function App() {
                 >
                   <Layers2 size={15} /> Overlay
                 </button>
+                {analysis?.change_overlay && (
+                  <button
+                    className={`tool ${changeView ? 'active' : ''}`}
+                    aria-pressed={changeView}
+                    onClick={() => {
+                      setChangeView((value) => !value)
+                      setOverlay(true)
+                    }}
+                  >
+                    Changed pixels
+                  </button>
+                )}
                 <button
                   className={`tool ${selecting ? 'active' : ''}`}
                   aria-pressed={selecting}
@@ -350,6 +370,7 @@ export function App() {
                   setSelecting(false)
                 }}
                 overlay={overlay}
+                changeView={changeView}
                 selecting={selecting}
                 disabled={!!busy}
               />
@@ -424,6 +445,7 @@ export function App() {
               <div className={`comparison-result ${analysis.comparison.status}`} role="status">
                 <strong>{statusNames[analysis.comparison.status]}</strong>
                 <p>{analysis.comparison.summary}</p>
+                <ChangeSummary comparison={analysis.comparison} />
               </div>
             )}
             <div className="assess-row">

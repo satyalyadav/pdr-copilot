@@ -4,27 +4,34 @@ from typing import Annotated, Any
 from uuid import UUID
 
 import cv2
-import numpy as np
 from dotenv import load_dotenv
 from fastapi import FastAPI, Form, HTTPException, UploadFile
 from fastapi.responses import Response
 from pydantic import ValidationError
 
 from backend.demo import DEMOS, render_demo
-from backend.vision import MAX_BYTES, Region, data_url, decode_image, observe
+from backend.vision import (
+    MAX_BYTES,
+    CapturedImage,
+    Region,
+    compare_reflections,
+    data_url,
+    decode_image,
+    observe,
+)
 
 load_dotenv()
 app = FastAPI(title="PDR inspection copilot")
 app.state.zen_transport = None
 
 
-async def load_input(upload: UploadFile | None, demo_id: str | None) -> np.ndarray:
+async def load_input(upload: UploadFile | None, demo_id: str | None) -> CapturedImage:
     if upload is not None and demo_id:
         raise HTTPException(422, "Choose a demo frame or an uploaded image, not both.")
     if demo_id:
         if demo_id not in DEMOS:
             raise HTTPException(404, "Demo frame not found.")
-        return render_demo(demo_id)
+        return CapturedImage.from_array(render_demo(demo_id))
     if upload is None:
         raise HTTPException(422, "Choose an image to inspect.")
     try:
@@ -70,23 +77,26 @@ async def analyze(
         selected = Region.model_validate(json.loads(region))
     except (ValueError, ValidationError) as exc:
         raise HTTPException(422, "Choose a valid region inside the image.") from exc
-    current = await load_input(image, demo_id)
+    capture = await load_input(image, demo_id)
+    current = capture.image
     result = observe(current, selected)
     overlay = result.pop("overlay")
+    change_overlay = None
     comparison: dict[str, Any] = {
         "status": "not_requested",
         "summary": "Add a previous capture to compare visible changes.",
         "mean_absolute_difference": None,
     }
     if previous_image is not None or previous_demo_id:
-        previous = await load_input(previous_image, previous_demo_id)
-        if current.shape != previous.shape:
+        previous_capture = await load_input(previous_image, previous_demo_id)
+        previous = previous_capture.image
+        if capture.original_size != previous_capture.original_size:
             comparison = {
                 "status": "blocked",
                 "summary": "Image dimensions differ. Recapture using the same framing.",
                 "mean_absolute_difference": None,
             }
-        elif np.array_equal(current, previous):
+        elif capture.fingerprint == previous_capture.fingerprint:
             comparison = {
                 "status": "unchanged",
                 "summary": "The decoded pixels are identical. This supplies no evidence of repair progress.",
@@ -95,17 +105,14 @@ async def analyze(
         elif demo_id and previous_demo_id:
             a, b = DEMOS[demo_id], DEMOS[previous_demo_id]
             fixed = a["camera"] == b["camera"] and a["light"] == b["light"]
-            comparison = {
-                "status": "comparable" if fixed else "blocked",
-                "summary": "Synthetic capture parameters are fixed. Pixel changes are illustrative and do not establish repair quality."
-                if fixed
-                else "Known synthetic camera or light motion. Recapture under the original conditions before comparing.",
-                "mean_absolute_difference": round(
-                    float(np.abs(current.astype(float) - previous).mean()), 3
-                )
-                if fixed
-                else None,
-            }
+            if fixed:
+                comparison, change_overlay = compare_reflections(current, previous, selected)
+            else:
+                comparison = {
+                    "status": "blocked",
+                    "summary": "Known synthetic camera or light motion. Recapture under the original conditions before comparing.",
+                    "mean_absolute_difference": None,
+                }
         else:
             comparison = {
                 "status": "unverified",
@@ -115,6 +122,7 @@ async def analyze(
     return {
         "observation": result,
         "overlay": overlay,
+        "change_overlay": change_overlay,
         "image": data_url(current),
         "region": selected.model_dump(),
         "width": current.shape[1],
@@ -147,7 +155,8 @@ async def guidance(
         selected = Region.model_validate(json.loads(region))
     except ValueError as exc:
         raise HTTPException(422, "Choose a valid region inside the image.") from exc
-    current = await load_input(image, demo_id)
+    capture = await load_input(image, demo_id)
+    current = capture.image
     observation = observe(current, selected)
     if mode == "zen":
         from backend.zen import select_guidance

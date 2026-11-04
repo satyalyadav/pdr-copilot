@@ -4,12 +4,14 @@ Checked locally on November 4, 2026. Scope: the working prototype in CONTEXT.md,
 
 ## Observed behavior
 
-- The production React build and TypeScript checks passed.
-- Python typechecking and linting passed during implementation. API tests passed for unchanged pixels, known synthetic camera/light motion, fixed synthetic changes, malformed input, unverified uploaded comparisons, known citations, invalid model output, provider errors, and timeouts.
+- The final suite passed all 14 API tests. Python typechecking, linting, and formatting checks passed for the backend and runner. Frontend formatting, TypeScript checks, and the production React build passed. Exact commands and completed output are retained in `.audit/final-checks.log`.
+- API tests passed for unchanged pixels, known synthetic camera/light motion, fixed synthetic changes, malformed input, unverified uploaded comparisons, known citations, invalid model output, provider errors, and timeouts.
 - A real OpenCode Go request using `deepseek-v4.1-flash` returned HTTP 200, predefined visible findings, and valid source-backed inspection steps. An earlier pay-as-you-go request failed for insufficient account funds. The default now uses the user's Go subscription route.
 - Chrome automation followed the UI through image assessment, technician note entry, record creation, JSON export, camera-motion rejection, the unchanged control, synthetic comparison, and a live DeepSeek image review. The downloaded export parsed as JSON and contained the recorded assessment.
 - Separate Chrome checks uploaded two fixture images through the file input, assessed both, observed the unverified-capture warning, changed the region with the keyboard slider, and confirmed that old evidence cleared before reassessment.
 - The mobile viewport measured 390 pixels wide with a document width of 390 pixels. The browser reported no JavaScript errors in either UI check. Desktop and mobile screenshots were inspected locally.
+
+Post-review checks also confirmed the selected-region difference description, cyan changed-pixel overlay, paired comparison chart, original-image dimension handling, and cleanup of a detached grandchild. The revised UI smoke check again found no browser errors or horizontal overflow.
 
 Raw local verification artifacts are in the ignored `.audit/` directory. The upload fixtures originated from this application's synthetic generator. They verify the upload path, not performance on real photographs.
 

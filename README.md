@@ -4,7 +4,7 @@ A local React and Python/OpenCV prototype for the scope in [CONTEXT.md](CONTEXT.
 
 ## Run locally
 
-Requires Python 3.12+, uv, Node 20.19+ or 22.12+, and npm.
+The supervised runner requires Linux or WSL2, Python 3.12+, uv, Node 20.19+ or 22.12+, and npm.
 
 ```bash
 uv sync --group dev
@@ -24,12 +24,12 @@ The configured default is DeepSeek V4.1 Flash through OpenCode Go's subscription
 
 1. Select **Initial reflection**, then **Assess image**. Amber points show stripe departures from fitted straight references. Open the explanation beneath the pixel measurements.
 2. Request OpenCode guidance if configured, inspect each citation, and record a note. **Record this assessment** adds an immutable record to the current tab's session.
-3. Select **After illustrative adjustment**, confirm the previous capture, then assess again. The fixture's camera and light settings are known. Its changing stripe warp is predetermined and does not model a physical repair.
+3. Select **After illustrative adjustment**, confirm the previous capture, then assess again. The fixture's camera and light settings are known. A cyan changed-pixel overlay and a paired bar chart describe the visible difference. Its changing stripe warp is predetermined and does not model a physical repair.
 4. Try **Unchanged control**, **Camera moved**, and **Light moved**. Identical pixels show no change. Known synthetic motion blocks comparison.
 5. Add your own PNG, JPEG, or WebP photos. Use **Select region** to drag a rectangle, or use the keyboard sliders. All changed uploaded comparisons remain unverified because the prototype cannot independently observe camera and light pose.
 6. Export the recorded assessments as JSON for expert review. Records live in browser memory and disappear on reload. Exports contain the analyzed, resized images and overlays, guidance provenance, sources, selections, and technician notes. Original upload files are not retained on the server or included in the export.
 
-Up to 12 uploads per session, 12 MB each, and 20 million pixels per image. Analysis resizes images to fit 960 by 720 pixels. Pixel measurements refer to that resized image. The overlay expects near-vertical continuous bright stripes. General dent photos can produce insufficient evidence, and ordinary body curvature can produce stripe residuals.
+Up to 12 uploads per session, 12 MB each, and 20 million pixels per image. Images must be at least 64 pixels wide and tall. Analysis resizes images to fit 960 by 720 pixels. Equality and dimension checks use the original decoded images before resizing. Pixel measurements refer to that resized image. The overlay expects near-vertical continuous bright stripes. General dent photos can produce insufficient evidence, and ordinary body curvature can produce stripe residuals.
 
 ## What is demonstrated
 
@@ -45,10 +45,11 @@ No output establishes depth, high/low sign, tool placement, force, paint conditi
 
 ```bash
 uv run pytest
-uv run mypy backend
-uv run ruff check backend
-uv run ruff format --check backend
+uv run mypy backend scripts
+uv run ruff check backend scripts
+uv run ruff format --check backend scripts
 npm --prefix frontend run typecheck
+npm --prefix frontend run format:check
 npm --prefix frontend run build
 ```
 

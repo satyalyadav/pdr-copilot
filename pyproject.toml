@@ -13,7 +13,7 @@ pythonpath = ["."]
 
 [tool.mypy]
 python_version = "3.12"
-files = ["backend"]
+files = ["backend", "scripts"]
 check_untyped_defs = true
 ignore_missing_imports = true
 

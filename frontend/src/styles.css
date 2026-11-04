@@ -1024,3 +1024,40 @@ footer p {
     transition: none !important;
   }
 }
+.change-summary {
+  margin-top: 16px;
+  border-top: 1px solid #c5d8e0;
+  padding-top: 12px;
+}
+.change-summary > p {
+  margin-bottom: 10px;
+}
+.change-row {
+  display: grid;
+  grid-template-columns: 55px 1fr 65px;
+  gap: 12px;
+  align-items: center;
+  margin: 7px 0;
+  font-size: 11px;
+}
+.change-row > div {
+  background: #d7e3e8;
+  height: 8px;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.change-row i {
+  display: block;
+  height: 100%;
+  background: #468291;
+}
+.change-row strong {
+  text-align: right;
+  font-size: 11px;
+}
+.change-summary small {
+  display: block;
+  margin-top: 9px;
+  color: #597682;
+  font-size: 10px;
+}

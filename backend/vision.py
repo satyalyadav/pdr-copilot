@@ -1,4 +1,6 @@
 import base64
+import hashlib
+from dataclasses import dataclass
 from io import BytesIO
 
 import cv2
@@ -30,18 +32,38 @@ def data_url(image: np.ndarray) -> str:
     return "data:image/png;base64," + base64.b64encode(encoded).decode()
 
 
-def decode_image(raw: bytes) -> np.ndarray:
+@dataclass
+class CapturedImage:
+    image: np.ndarray
+    original_size: tuple[int, int]
+    fingerprint: str
+
+    @classmethod
+    def from_array(cls, image: np.ndarray):
+        rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        return cls(
+            image, (image.shape[1], image.shape[0]), hashlib.sha256(rgb.tobytes()).hexdigest()
+        )
+
+
+def decode_image(raw: bytes) -> CapturedImage:
     if not raw or len(raw) > MAX_BYTES:
         raise ValueError("Choose an image smaller than 12 MB.")
     try:
         with Image.open(BytesIO(raw)) as image:
+            if image.width < 64 or image.height < 64:
+                raise ValueError("Use an image at least 64 pixels wide and tall.")
             if image.width * image.height > 20_000_000:
                 raise ValueError("Choose an image with at most 20 million pixels.")
             if image.format not in {"PNG", "JPEG", "WEBP"}:
                 raise ValueError("Use a PNG, JPEG, or WebP image.")
             oriented = ImageOps.exif_transpose(image).convert("RGB")
+            original_size = oriented.size
+            fingerprint = hashlib.sha256(oriented.tobytes()).hexdigest()
             oriented.thumbnail((960, 720))
-            return cv2.cvtColor(np.array(oriented), cv2.COLOR_RGB2BGR)
+            return CapturedImage(
+                cv2.cvtColor(np.array(oriented), cv2.COLOR_RGB2BGR), original_size, fingerprint
+            )
     except (UnidentifiedImageError, OSError, Image.DecompressionBombError) as exc:
         raise ValueError("The file could not be read as a PNG, JPEG, or WebP image.") from exc
 
@@ -99,3 +121,32 @@ def observe(image: np.ndarray, region: Region) -> dict:
         "reference": "Straight line fitted to each bright stripe above and below the selected region. Panel curvature and lighting can also create residuals.",
         "overlay": data_url(overlay),
     }
+
+
+def compare_reflections(
+    current: np.ndarray, previous: np.ndarray, region: Region
+) -> tuple[dict, str]:
+    h, w = current.shape[:2]
+    mask = np.zeros((h, w), dtype=bool)
+    x0, y0 = int(region.x * w), int(region.y * h)
+    x1 = int((region.x + region.width) * w)
+    y1 = int((region.y + region.height) * h)
+    mask[y0:y1, x0:x1] = True
+    difference = np.abs(current.astype(float) - previous).mean(axis=2)
+    selected_difference = round(float(difference[mask].mean()), 3)
+    outside_difference = round(float(difference[~mask].mean()), 3) if (~mask).any() else None
+    overlay = np.zeros((h, w, 4), dtype=np.uint8)
+    changed = difference > 8
+    overlay[changed, :3] = (211, 180, 34)
+    overlay[changed, 3] = np.clip(difference[changed] * 2, 65, 190).astype(np.uint8)
+    before = observe(previous, region)["mean_deviation_px"]
+    after = observe(current, region)["mean_deviation_px"]
+    return {
+        "status": "comparable",
+        "summary": f"The selected region changed by an average of {selected_difference:.2f} intensity levels on a 0 to 255 scale. The cyan overlay locates changed pixels. Synthetic camera and light settings are fixed. These are image differences, not evidence of repair quality.",
+        "mean_absolute_difference": round(float(difference.mean()), 3),
+        "region_mean_absolute_difference": selected_difference,
+        "outside_mean_absolute_difference": outside_difference,
+        "previous_deviation_px": before,
+        "current_deviation_px": after,
+    }, data_url(overlay)

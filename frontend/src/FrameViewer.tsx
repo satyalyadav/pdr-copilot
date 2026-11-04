@@ -9,6 +9,7 @@ export function FrameViewer({
   region,
   onRegion,
   overlay,
+  changeView,
   selecting,
   disabled,
 }: {
@@ -16,6 +17,7 @@ export function FrameViewer({
   analysis: Analysis | null
   region: Region
   onRegion: (region: Region) => void
+  changeView: boolean
   overlay: boolean
   selecting: boolean
   disabled: boolean
@@ -76,8 +78,12 @@ export function FrameViewer({
         {analysis && overlay && (
           <img
             className="distortion-overlay"
-            src={analysis.overlay}
-            alt="Amber points mark stripe departures from a fitted reference."
+            src={changeView && analysis.change_overlay ? analysis.change_overlay : analysis.overlay}
+            alt={
+              changeView
+                ? 'Cyan marks show changed pixels between synthetic captures.'
+                : 'Amber points mark stripe departures from a fitted reference.'
+            }
             draggable={false}
           />
         )}
@@ -96,7 +102,9 @@ export function FrameViewer({
       <div className="viewer-caption">
         <span className="legend-dot" />{' '}
         {overlay
-          ? 'Amber marks show image evidence, not tool positions.'
+          ? changeView
+            ? 'Cyan marks show changed pixels, not repair progress.'
+            : 'Amber marks show image evidence, not tool positions.'
           : 'Original image. Overlay hidden.'}
       </div>
     </div>

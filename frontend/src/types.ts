@@ -26,6 +26,7 @@ export type Analysis = {
     marked_points: number
     reference: string
   }
+  change_overlay: string | null
   overlay: string
   image: string
   region: Region
@@ -36,6 +37,10 @@ export type Analysis = {
     status: 'not_requested' | 'unchanged' | 'comparable' | 'blocked' | 'unverified'
     summary: string
     mean_absolute_difference: number | null
+    region_mean_absolute_difference?: number
+    outside_mean_absolute_difference?: number | null
+    previous_deviation_px?: number | null
+    current_deviation_px?: number | null
   }
 }
 export type Guidance = {
