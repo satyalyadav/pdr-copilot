@@ -1,6 +1,6 @@
 # Real photos for manual testing
 
-These original downloaded images are not loaded automatically by the app. No app behavior was changed. The image files are local-only and ignored by Git because no reuse license was established; download them from the URLs in `sources.json` if needed.
+These original downloaded images are not loaded automatically by the app. Adding them did not change app behavior. The image files are local-only and ignored by Git because no reuse license was established; download them from the URLs in `sources.json` if needed.
 
 Start with `denttime-rivian-before.webp`, then `denttime-rivian-after.webp`. The first shows an obvious depression beneath the rear light. The publisher presents the second as the corresponding repaired panel. The close-up framing is similar, but reflections and viewpoint differ. This is a qualitative example, not a controlled measurement of progress.
 
@@ -16,9 +16,9 @@ All pairings are the publishers' accounts. No pair establishes an AI-caused repa
 
 ## What to test
 
-1. Manually upload a before photo and click **Assess image**. This runs the local stripe check and displays an inspection checklist.
-2. Click **Send image to OpenCode** to test actual model image review. The present model response remains limited to predefined findings and inspection steps.
-3. Repeat with the corresponding after photo. The current model does not receive the earlier image or adjustment note; it cannot yet perform contextual reassessment.
+1. Manually upload a before photo and click **Assess image**. This runs the local stripe check and, when the backend key is configured, the model review. The badge reports **AI review** or **Basic checklist**.
+2. The model response remains limited to predefined findings and inspection steps.
+3. Repeat with the corresponding after photo. The model does not receive the earlier image or adjustment note; it cannot yet perform contextual reassessment.
 
 ## OpenCV check
 
