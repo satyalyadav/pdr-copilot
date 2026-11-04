@@ -1,10 +1,16 @@
-# Curated knowledge and provenance
+# Prototype knowledge sources
 
-The application stores short paraphrases, links, and document locators in `backend/knowledge.py`. It renders fixed inspection steps that cite those records. The model can select those steps and predefined visible findings; it cannot supply an arbitrary source URL or physical instruction. This constraint deliberately limits the assistant to inspection.
+The app stores concise paraphrases, original URLs, locators and applicability notes in `backend/knowledge.py`.
 
-- [Rivian RCI-52-22-002-2](https://oemonestop.com/sites/default/files/Rivian_POS_Paintless-Dent-Repair%282-2-23%29.pdf), February 2, 2023, page 1. Indexed primary-document text checked November 4, 2026. Direct PDF retrieval failed during this run. The app marks it historical and does not claim to have resolved current procedures, the vehicle's panel material, or paint compliance.
-- [Ding King's lighting lesson](https://onlinepdrtraining.thedingking.com/paintless-dent-repair/module-b-explanation-of-lights-and-reflections/), setup section. Page text checked November 4, 2026. The app uses its setup dependence and visibility guidance, without applying its high/low interpretation to an arbitrary photo.
+| Source | Used for | Boundary |
+| --- | --- | --- |
+| [Rivian PDR statement, 2023](https://oemonestop.com/sites/default/files/Rivian_POS_Paintless-Dent-Repair%282-2-23%29.pdf) | Paint inspection, access restrictions and external pulling | Historical statement; it does not establish current vehicle-specific authorization. |
+| [Ding King lighting lesson](https://onlinepdrtraining.thedingking.com/paintless-dent-repair/module-b-explanation-of-lights-and-reflections/) | Reflection inspection | Interpretation depends on the lighting setup; an ordinary photo is not calibrated geometry. |
+| [KECO precision lifter tutorial](https://www.kecotabs.com/blogs/all/crease-killer-precision-lifter) | Crease-tab alignment, flexible-tab initial reduction and incremental correction | Manufacturer transcript reread November 4, 2026. Its deliberate damage demonstrations are excluded. It does not validate this vehicle's repair plan. |
+| [Car Cosmetics PDR FAQ](https://www.carcosmetics.com/en/service/frequently-asked-questions-faq/) | Reflection checks, controlled external pulling and reported-high correction | Supplier guidance reread November 4, 2026. Adhesive preparation remains system-specific. |
 
-The recapture step includes a proposed fixed-camera/light protocol, labeled as a prototype proposal. The training source supports the need for readable lighting, not the validity of our capture gate. The source summaries do not replace an OEM service procedure or expert assessment.
+The six cards are prototype adaptations. Their approach, steps, tools and expected visual changes are owned by code. The LLM selects a card and supplies observations, shape, assumptions, landmarks and reasoning. A citation establishes the source of a technique, not the correctness of its application to a particular dent.
 
-[OpenCode Go's documentation](https://opencode.ai/v2/docs/console/go/) and authenticated model metadata were checked November 4, 2026. The API key remains in the ignored backend `.env`. The app uses the advertised OpenAI-compatible chat-completions protocol over OpenCode Go's subscription endpoint. It does not call an OpenAI account directly.
+The crease card now uses the KECO tutorial's correction sequence rather than treating all sharp creases as a referral. Its exact location is an unvalidated image interpretation. The separate KECO 6C collision workflow ends with refinishing and was not incorporated as a PDR completion procedure.
+
+Before/after publisher photos are recorded demonstration inputs. They supply no intermediate actions, force measurements or evidence that AI guidance produced the result. Human PDR expert involvement is not required for this prototype. Physical effectiveness remains untested.

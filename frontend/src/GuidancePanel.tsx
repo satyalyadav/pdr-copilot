@@ -1,108 +1,122 @@
 import { LoaderCircle } from 'lucide-react'
-import type { Analysis, Guidance } from './types'
+import type { CopilotResult, Outcome } from './types'
 
-const stepTitles: Record<string, string> = {
-  confirm_lighting: 'Check the lighting',
-  recapture: 'Take a clearer photo',
-  inspect_paint: 'Have the paint checked',
-  verify_procedure: "Check the vehicle's repair procedure",
-}
-
-const findingLabels: Record<string, string> = {
-  stripe_curvature: 'Some reflected lines appear curved.',
-  readable_stripes: 'The reflected lines are visible.',
-  glare: 'Glare may obscure part of the photo.',
-  occlusion: 'Part of the view may be blocked.',
-  uncertain: 'A clearer view is needed.',
-}
-
-function findingText(id: string | undefined, fallback: string): string {
-  return (id && findingLabels[id]) || fallback
+const changeLabels = {
+  looks_flatter: 'Looks flatter',
+  no_visible_change: 'No visible change',
+  looks_worse: 'Looks more distorted',
+  cannot_judge: 'Change is unclear',
 }
 
 export function GuidancePanel({
-  analysis,
-  guidance,
-  zenConfigured,
+  result,
   busy,
-  hasPhoto,
   error,
-  showDots,
+  showingPrevious,
+  pendingOutcome,
+  saved,
 }: {
-  analysis: Analysis | null
-  guidance: Guidance | null
-  zenConfigured: boolean
-  busy: string | null
-  hasPhoto: boolean
+  result: CopilotResult | null
+  busy: boolean
   error: string
-  showDots: boolean
+  showingPrevious: boolean
+  pendingOutcome: Outcome
+  saved: boolean
 }) {
   return (
     <aside className="guidance" aria-label="Assessment results">
-      <div className="guidance-heading">
-        <h2 id="assessment-heading">Assessment</h2>
-        {!busy && guidance && (
-          <span className="assessment-badge">
-            {guidance.mode === 'zen' ? 'AI review' : 'Basic checklist'}
-          </span>
+      <h2 tabIndex={-1} id="assessment-heading">
+        {showingPrevious ? 'Previous assessment' : saved ? 'Saved assessment' : 'Your next action'}
+      </h2>
+      <div aria-live="polite">
+        {busy && (
+          <div className="review-loading">
+            <LoaderCircle size={22} className="spin" /> Reviewing…
+          </div>
         )}
-      </div>
-      <div className="assessment-content" aria-live="polite" aria-atomic="true">
         {error && (
-          <p className="assessment-error" role="alert">
+          <p className="error" role="alert">
             {error}
           </p>
         )}
-        {busy ? (
-          <div className="review-loading">
-            <LoaderCircle className="spin" size={24} />
-            <p>{busy === 'zen' ? 'Reviewing your photo...' : 'Checking your photo...'}</p>
-          </div>
-        ) : guidance ? (
-          <>
-            {guidance.mode === 'zen' && (guidance.finding_ids?.length ?? 0) > 0 && (
-              <div className="model-findings">
-                {guidance.finding_ids.map((id, index) => (
-                  <p key={id}>{findingText(id, guidance.findings[index] ?? '')}</p>
-                ))}
-              </div>
-            )}
-            {guidance.mode === 'local' && (
-              <p className="assessment-note">
-                {zenConfigured
-                  ? 'AI review was not completed. Basic checks are shown below.'
-                  : 'AI review is unavailable. Basic checks are shown below.'}
-              </p>
-            )}
-            <h3 className="next-checks-title">Next checks</h3>
-            <ol className="inspection-steps">
-              {guidance.steps.map((step) => (
-                <li key={step.id}>
-                  <h3>{stepTitles[step.id] ?? step.title}</h3>
-                </li>
-              ))}
-            </ol>
-            <p className="guidance-limits">
-              {showDots && 'Dots mark where reflected lines bend. '}
-              This is not a measure of dent depth, repair quality, or progress.
-            </p>
-            <details className="source-library">
-              <summary>Sources</summary>
-              {guidance.sources.map((source) => (
-                <a key={source.id} href={source.url} target="_blank" rel="noreferrer">
-                  {source.title}
-                </a>
-              ))}
-            </details>
-          </>
-        ) : (
-          <p className="assessment-placeholder">
-            {!hasPhoto
-              ? 'Add a photo and click Assess image.'
-              : analysis
-                ? 'Click Assess image to try again.'
-                : 'Click Assess image to review this photo.'}
+        {!result && !busy && <p className="muted">Add a dent photo, then click Assess image.</p>}
+        {showingPrevious ? (
+          <p className="stop-condition">
+            {pendingOutcome === 'paint_issue'
+              ? 'You reported a paint concern. Keep corrections paused and reassess.'
+              : pendingOutcome === 'went_high'
+                ? 'You reported a raised spot. Do not repeat the previous pull; reassess this photo.'
+                : 'Reassess the new photo to get an updated plan. The previous instructions do not apply to this image.'}
           </p>
+        ) : (
+          result && (
+            <>
+              {result.comparison && (
+                <section className="change-result">
+                  <h3>{changeLabels[result.comparison.change]}</h3>
+                  <p>{result.comparison.evidence}</p>
+                  <small>Visual comparison only; lighting and angle can affect appearance.</small>
+                </section>
+              )}
+              <section className="ai-observation">
+                <h3>What the image shows</h3>
+                <p className="visible-evidence">{result.visible_evidence}</p>
+                <p className="work-location">
+                  <strong>Focus area:</strong> {result.where_to_work}
+                </p>
+                <p className="action-reason">{result.reason}</p>
+                {result.confidence === 'low' && (
+                  <p className="muted">The image interpretation has low confidence.</p>
+                )}
+              </section>
+              <section className={`action-plan ${result.status === 'stop' ? 'stopped' : ''}`}>
+                {result.status === 'proposal' && (
+                  <p className="plan-label">Proposed adjustment, based on this photo</p>
+                )}
+                <h3>{result.next_action.title}</h3>
+                <p>{result.next_action.approach}</p>
+                <p className="plan-tools">
+                  <strong>Tools:</strong> {result.next_action.tools}
+                </p>
+                <ol className="action-steps">
+                  {result.next_action.steps.map((step) => (
+                    <li key={step}>{step}</li>
+                  ))}
+                </ol>
+                <div className="expected-change">
+                  <h3>What to expect</h3>
+                  <p>{result.next_action.expected_change}</p>
+                </div>
+                <p className="stop-condition">
+                  <strong>Pause:</strong> {result.next_action.stop_when}
+                </p>
+              </section>
+              <details className="source-library">
+                <summary>Assumptions and physical checks</summary>
+                {result.assumptions.map((assumption) => (
+                  <p key={assumption}>{assumption}</p>
+                ))}
+                {result.physical_preconditions.map((condition) => (
+                  <p key={condition}>{condition}</p>
+                ))}
+                <p>{result.next_action.scope}</p>
+                <p>{result.limits}</p>
+              </details>
+              <details className="source-library">
+                <summary>Repair knowledge and sources</summary>
+                {result.sources.map((source) => (
+                  <article key={source.id}>
+                    <a href={source.url} target="_blank" rel="noreferrer">
+                      {source.title}
+                    </a>
+                    <p>{source.passage}</p>
+                    <small>{source.locator}</small>
+                    <small>{source.status}</small>
+                  </article>
+                ))}
+              </details>
+            </>
+          )
         )}
       </div>
     </aside>

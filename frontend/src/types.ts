@@ -61,3 +61,62 @@ export type SessionEntry = {
   guidance: Guidance
   technicianNote: string
 }
+
+export type Outcome =
+  | 'not_reported'
+  | 'not_done'
+  | 'still_low'
+  | 'looks_flatter'
+  | 'went_high'
+  | 'paint_issue'
+  | 'unsure'
+export type CaseContext = {
+  vehicle: string
+  material: 'unknown' | 'steel' | 'aluminum' | 'other'
+}
+export type Selection = {
+  visible_evidence: string
+  dent_shape: 'crease' | 'broad_low' | 'small_ding' | 'raised_spot' | 'nearly_flat' | 'unclear'
+  assumptions: string[]
+  dent_region: Region | null
+  confidence: 'low' | 'medium' | 'high'
+  card_id: string
+  where_to_work: string
+  reason: string
+  comparison: {
+    view_match: 'similar' | 'uncertain' | 'different'
+    change: 'looks_flatter' | 'no_visible_change' | 'looks_worse' | 'cannot_judge'
+    evidence: string
+  } | null
+}
+export type CopilotResult = Omit<Selection, 'card_id'> & {
+  image_fingerprint: string
+  selection: Selection
+  status: 'ready' | 'proposal' | 'stop'
+  next_action: {
+    id: string
+    title: string
+    kind: 'repair' | 'inspection' | 'stop'
+    tools: string
+    approach: string
+    expected_change: string
+    steps: string[]
+    stop_when: string
+    scope: string
+    source_ids: string[]
+  }
+  physical_preconditions: string[]
+  sources: Source[]
+  limits: string
+  repair_actions_validated: false
+}
+export type Cycle = {
+  id: string
+  captureId: string
+  previousCaptureId: string | null
+  result: CopilotResult
+  actionNote: string
+  outcome: Outcome
+  context: CaseContext
+  timestamp: string
+}

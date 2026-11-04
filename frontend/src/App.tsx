@@ -1,77 +1,56 @@
 import { useEffect, useRef, useState } from 'react'
-import {
-  ArrowDownToLine,
-  Check,
-  Eye,
-  Focus,
-  ImagePlus,
-  Layers2,
-  LoaderCircle,
-  RotateCcw,
-  ScanLine,
-} from 'lucide-react'
-import { ChangeSummary } from './ChangeSummary'
-import { FrameViewer } from './FrameViewer'
+import { Download, ImagePlus, LoaderCircle, ScanLine } from 'lucide-react'
+import { request } from './api'
 import { GuidancePanel } from './GuidancePanel'
-import { captureForm, request } from './api'
-import type { Analysis, Capture, Guidance, Region, SessionEntry } from './types'
+import type { Capture, CaseContext, CopilotResult, Cycle, Outcome } from './types'
 
-const initialRegion: Region = { x: 0.28, y: 0.22, width: 0.44, height: 0.56 }
-const regionLabels = {
-  x: 'Left position',
-  y: 'Top position',
-  width: 'Box width',
-  height: 'Box height',
-}
-const statusNames: Record<Analysis['comparison']['status'], string> = {
-  not_requested: 'First assessment',
-  unchanged: 'Identical image',
-  comparable: 'Synthetic comparison only',
-  blocked: 'Comparison blocked',
-  unverified: 'Capture conditions unverified',
-}
+const initialContext: CaseContext = { vehicle: '', material: 'unknown' }
+const outcomes: { id: Outcome; label: string }[] = [
+  { id: 'not_reported', label: 'Let the copilot assess the result' },
+  { id: 'not_done', label: 'No correction made' },
+  { id: 'still_low', label: 'Still low under the light' },
+  { id: 'looks_flatter', label: 'Looks flatter' },
+  { id: 'went_high', label: 'Raised spot confirmed under the PDR light' },
+  { id: 'paint_issue', label: 'Paint concern, stop corrections' },
+  { id: 'unsure', label: 'Not sure yet' },
+]
 
 export function App() {
   const [captures, setCaptures] = useState<Capture[]>([])
   const [selectedId, setSelectedId] = useState('')
-  const [previousId, setPreviousId] = useState('')
-  const [region, setRegion] = useState<Region>(initialRegion)
-  const [analysis, setAnalysis] = useState<Analysis | null>(null)
-  const [guidance, setGuidance] = useState<Guidance | null>(null)
-  const [zenConfigured, setZenConfigured] = useState(false)
-  const [busy, setBusy] = useState<'assessment' | 'zen' | null>(null)
-  const [error, setError] = useState('')
-  const [assessmentError, setAssessmentError] = useState('')
-  const [changeView, setChangeView] = useState(false)
-  const [overlay, setOverlay] = useState(true)
-  const [selecting, setSelecting] = useState(false)
-  const [toolsOpen, setToolsOpen] = useState(false)
+  const [cycles, setCycles] = useState<Cycle[]>([])
+  const [context, setContext] = useState<CaseContext>(initialContext)
   const [note, setNote] = useState('')
-  const [entries, setEntries] = useState<SessionEntry[]>([])
-  const [saved, setSaved] = useState(false)
-  const [showBaseline, setShowBaseline] = useState(false)
-  const sessionId = useRef(crypto.randomUUID())
-  const resultPanel = useRef<HTMLDivElement>(null)
+  const [outcome, setOutcome] = useState<Outcome>('not_reported')
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState('')
+  const [configured, setConfigured] = useState<boolean | null>(null)
+  const [showPrevious, setShowPrevious] = useState(false)
   const upload = useRef<HTMLInputElement>(null)
+  const resultPanel = useRef<HTMLDivElement>(null)
   const objectUrls = useRef<string[]>([])
   const controller = useRef<AbortController | null>(null)
+  const sessionId = useRef(crypto.randomUUID())
   const capture = captures.find((item) => item.id === selectedId)
-  const previous = captures.find((item) => item.id === previousId)
+  const latest = cycles.at(-1)
+  const selectedCycle = [...cycles].reverse().find((cycle) => cycle.captureId === selectedId)
+  const previousCycle = !selectedCycle && latest?.captureId !== selectedId ? latest : undefined
+  const previous = captures.find(
+    (item) => item.id === (previousCycle?.captureId ?? selectedCycle?.previousCaptureId),
+  )
+  const result = selectedCycle?.result ?? previousCycle?.result ?? null
+  const showingPrevious = !selectedCycle && Boolean(previousCycle)
+  const photoResult = selectedCycle?.result
+  const region = photoResult?.dent_region
 
   useEffect(() => {
     const abort = new AbortController()
-    async function initialize() {
-      try {
-        const health = await request<{ zen_configured: boolean }>('/api/health', {
-          signal: abort.signal,
-        })
-        setZenConfigured(health.zen_configured)
-      } catch (err) {
+    request<{ zen_configured: boolean }>('/api/health', { signal: abort.signal })
+      .then((health) => setConfigured(health.zen_configured))
+      .catch(() => {
         if (!abort.signal.aborted)
-          setError(err instanceof Error ? err.message : 'Start the backend and reload this page.')
-      }
-    }
-    void initialize()
+          setError('Cannot reach the backend. Start it and reload this page.')
+      })
     return () => abort.abort()
   }, [])
   useEffect(
@@ -82,451 +61,375 @@ export function App() {
     [],
   )
 
-  function clearResult() {
-    controller.current?.abort()
-    setChangeView(false)
-    setAnalysis(null)
-    setGuidance(null)
-    setError('')
-    setAssessmentError('')
-    setSaved(false)
-    setShowBaseline(false)
-    setBusy(null)
-  }
-  function chooseCapture(id: string) {
-    if (id === selectedId) return
-    clearResult()
-    setSelectedId(id)
-    setNote('')
-    const index = captures.findIndex((item) => item.id === id)
-    setPreviousId(index > 0 ? captures[index - 1].id : '')
-  }
-  async function assess() {
-    if (!capture || busy) return
-    const abort = new AbortController()
-    controller.current = abort
-    setBusy('assessment')
-    setAssessmentError('')
-    setSaved(false)
-    setGuidance(null)
-    requestAnimationFrame(() => {
-      resultPanel.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      resultPanel.current?.focus({ preventScroll: true })
-    })
-    try {
-      const [result, local] = await Promise.all([
-        request<Analysis>('/api/analyze', {
-          method: 'POST',
-          body: captureForm(capture, region, previous),
-          signal: abort.signal,
-        }),
-        request<Guidance>('/api/guidance', {
-          method: 'POST',
-          body: captureForm(capture, region),
-          signal: abort.signal,
-        }),
-      ])
-      if (abort.signal.aborted) return
-      setAnalysis(result)
-      setGuidance(local)
-      if (zenConfigured) {
-        setBusy('zen')
-        const form = captureForm(capture, region)
-        form.set('mode', 'zen')
-        form.set('session_id', sessionId.current)
-        const review = await request<Guidance>('/api/guidance', {
-          method: 'POST',
-          body: form,
-          signal: abort.signal,
-        })
-        if (!abort.signal.aborted) setGuidance(review)
-      }
-    } catch (err) {
-      if (!abort.signal.aborted)
-        setAssessmentError(err instanceof Error ? err.message : 'Assessment failed. Try again.')
-    } finally {
-      if (controller.current === abort) setBusy(null)
+  function addPhotos(files: FileList | null) {
+    if (!files?.length) return
+    const incoming = Array.from(files)
+    if (captures.length + incoming.length > 12) {
+      setError('Use up to 12 photos per case.')
+      return
     }
-  }
-  function addUploads(files: FileList | null) {
-    if (!files) return
-    const images = Array.from(files)
     if (
-      images.some(
+      incoming.some(
         (file) =>
-          !['image/png', 'image/jpeg', 'image/webp'].includes(file.type) ||
+          !['image/jpeg', 'image/png', 'image/webp'].includes(file.type) ||
           file.size > 12 * 1024 * 1024,
       )
     ) {
-      setError('Choose PNG, JPEG, or WebP images smaller than 12 MB each.')
+      setError('Choose PNG, JPEG or WebP photos up to 12 MB each.')
       return
     }
-    if (captures.length + images.length > 12) {
-      setError(
-        'Use up to 12 uploaded captures per session. Export this session before reloading for another batch.',
-      )
-      return
-    }
-    const added = images.map((file) => {
+    const added = incoming.map((file) => {
       const url = URL.createObjectURL(file)
       objectUrls.current.push(url)
       return {
         id: crypto.randomUUID(),
         title: file.name,
-        note: 'Your uploaded photo. Camera and light stability are unverified.',
+        note: '',
         url,
         file,
         timestamp: new Date().toISOString(),
       }
     })
-    if (added.length) {
-      clearResult()
+    setCaptures((items) => [...items, ...added])
+    setSelectedId(added[0].id)
+    setError('')
+    setShowPrevious(false)
+  }
+
+  async function assess() {
+    if (!capture || busy) return
+    const abort = new AbortController()
+    controller.current = abort
+    setBusy(true)
+    setError('')
+    const submittedContext = { ...context }
+    const baseline =
+      previous ?? captures.find((item) => item.id === selectedCycle?.previousCaptureId)
+    const submittedNote = previousCycle ? note.trim() : (selectedCycle?.actionNote ?? '')
+    const submittedOutcome = previousCycle ? outcome : (selectedCycle?.outcome ?? 'not_reported')
+    const pastCycles = selectedCycle
+      ? cycles.slice(
+          0,
+          cycles.findIndex((cycle) => cycle.id === selectedCycle.id),
+        )
+      : cycles
+    const form = new FormData()
+    form.set('image', capture.file)
+    form.set('mode', 'zen')
+    form.set('session_id', sessionId.current)
+    form.set('case_context', JSON.stringify(submittedContext))
+    if (baseline) {
+      form.set('previous_image', baseline.file)
+      form.set('action_note', submittedNote)
+      form.set('outcome', submittedOutcome)
+      form.set(
+        'history',
+        JSON.stringify(
+          pastCycles.slice(-3).map((cycle) => ({
+            assessment: cycle.result.selection,
+            action_note: cycle.actionNote,
+            outcome: cycle.outcome,
+          })),
+        ),
+      )
+    }
+    try {
+      const assessed = await request<CopilotResult>('/api/guidance', {
+        method: 'POST',
+        body: form,
+        signal: abort.signal,
+      })
+      const cycle: Cycle = {
+        id: crypto.randomUUID(),
+        captureId: capture.id,
+        previousCaptureId: baseline?.id ?? null,
+        result: assessed,
+        actionNote: baseline ? submittedNote : '',
+        outcome: baseline ? submittedOutcome : 'not_reported',
+        context: submittedContext,
+        timestamp: new Date().toISOString(),
+      }
+      setCycles((items) =>
+        selectedCycle
+          ? items.map((item) => (item.id === selectedCycle.id ? cycle : item))
+          : [...items, cycle],
+      )
+      setContext(submittedContext)
       setNote('')
-      setCaptures((current) => [...current, ...added])
-      setPreviousId(capture?.id ?? '')
-      setSelectedId(added[0].id)
+      setOutcome('not_reported')
+      setShowPrevious(false)
+      setTimeout(() => {
+        resultPanel.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+        document.getElementById('assessment-heading')?.focus({ preventScroll: true })
+      }, 0)
+    } catch (err) {
+      if (!abort.signal.aborted)
+        setError(err instanceof Error ? err.message : 'Review failed. Retry the assessment.')
+    } finally {
+      if (!abort.signal.aborted) setBusy(false)
     }
   }
-  function saveAssessment() {
-    if (!capture || !analysis || !guidance) return
-    setEntries((current) => [
-      ...current,
-      {
-        id: crypto.randomUUID(),
-        capture: capture.title,
-        previous: previous?.title ?? null,
-        recordedAt: new Date().toISOString(),
-        region,
-        analysis,
-        guidance,
-        technicianNote: note,
-      },
-    ])
-    setSaved(true)
-  }
-  function exportSession() {
-    const data = {
-      title: 'PDR inspection session',
-      exportedAt: new Date().toISOString(),
-      limitations:
-        'Experimental image evidence and inspection guidance. No physical repair validation.',
-      entries,
+
+  function exportCase() {
+    const payload = {
+      version: 3,
+      sessionId: sessionId.current,
+      context,
+      photos: captures.map(({ id, title, timestamp }) => ({ id, title, timestamp })),
+      cycles,
     }
     const url = URL.createObjectURL(
-      new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }),
+      new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' }),
     )
-    const link = document.createElement('a')
-    link.href = url
-    link.download = 'pdr-inspection-session.json'
-    link.click()
+    const anchor = document.createElement('a')
+    anchor.href = url
+    anchor.download = 'pdr-case.json'
+    anchor.click()
     setTimeout(() => URL.revokeObjectURL(url), 1000)
-  }
-  function updateRegion(next: Region) {
-    clearResult()
-    setRegion(next)
   }
 
   return (
-    <div className="app">
+    <>
       <header className="app-header">
-        <a className="brand" href="/" aria-label="PDR copilot home">
+        <div className="brand">
           <span className="brand-icon">
             <ScanLine size={23} />
           </span>
-          <span>
-            PDR <strong>copilot</strong>
-          </span>
-        </a>
+          <span>PDR copilot</span>
+        </div>
+        {cycles.length > 0 && (
+          <button className="button secondary" onClick={exportCase}>
+            <Download size={16} /> Export case
+          </button>
+        )}
       </header>
       <main>
         <div className="page-intro">
-          <h1>Dent assessment</h1>
+          <h1>Assess. Adjust. Reassess.</h1>
+          <span className="prototype-label">Photo-guided prototype</span>
         </div>
-        {error && (
-          <div className="error" role="alert">
-            {error}
-          </div>
-        )}
-        <div className="workspace">
-          <section className="inspection" aria-label="Photo">
-            <div className="section-toolbar">
-              <h2>{capture?.title ?? 'Your photo'}</h2>
-              <div className="photo-actions">
-                <button
-                  className="button secondary"
-                  disabled={!!busy}
-                  onClick={() => upload.current?.click()}
-                >
-                  <ImagePlus size={16} /> Add photos
-                </button>
-                {capture && (
-                  <button
-                    className="button primary"
-                    disabled={!!busy}
-                    onClick={() => void assess()}
-                  >
-                    {busy ? <LoaderCircle className="spin" size={17} /> : <ScanLine size={17} />}
-                    {busy ? 'Assessing...' : 'Assess image'}
-                  </button>
-                )}
-              </div>
+        <details className="case-setup">
+          <summary>Vehicle details, optional</summary>
+          <div className="setup-fields">
+            <label>
+              Vehicle
               <input
-                ref={upload}
-                type="file"
-                accept="image/png,image/jpeg,image/webp"
-                multiple
-                hidden
-                onChange={(event) => {
-                  addUploads(event.target.files)
-                  event.target.value = ''
-                }}
+                value={context.vehicle}
+                maxLength={100}
+                placeholder="e.g. Rivian R1S, model year"
+                disabled={busy}
+                onChange={(event) => setContext({ ...context, vehicle: event.target.value })}
               />
+            </label>
+            <label>
+              Panel material
+              <select
+                value={context.material}
+                disabled={busy}
+                onChange={(event) =>
+                  setContext({
+                    ...context,
+                    material: event.target.value as CaseContext['material'],
+                  })
+                }
+              >
+                <option value="unknown">Not confirmed</option>
+                <option value="steel">Steel</option>
+                <option value="aluminum">Aluminum</option>
+                <option value="other">Other</option>
+              </select>
+            </label>
+          </div>
+        </details>
+        {configured === false && (
+          <p className="error">
+            AI guidance needs OPENCODE_API_KEY in the backend .env file. Add it and restart the
+            backend.
+          </p>
+        )}
+        <input
+          ref={upload}
+          type="file"
+          accept="image/png,image/jpeg,image/webp"
+          multiple
+          hidden
+          aria-label="Upload dent photos"
+          onChange={(event) => {
+            addPhotos(event.target.files)
+            event.target.value = ''
+          }}
+        />
+        <div className="workspace">
+          <section className="inspection" aria-label="Dent photo">
+            <div className="section-toolbar">
+              <h2>{capture?.title ?? 'Your dent photo'}</h2>
+              <button
+                className="button secondary"
+                onClick={() => upload.current?.click()}
+                disabled={busy}
+              >
+                <ImagePlus size={17} />
+                {capture ? 'Add next photo' : 'Add photo'}
+              </button>
             </div>
             {capture ? (
               <>
-                <FrameViewer
-                  capture={capture}
-                  analysis={analysis}
-                  region={region}
-                  onRegion={(next) => {
-                    updateRegion(next)
-                    setSelecting(false)
-                  }}
-                  overlay={overlay && analysis?.observation.state === 'observable'}
-                  changeView={changeView}
-                  selecting={selecting}
-                  showRegion={toolsOpen || !!analysis}
-                  disabled={!!busy}
-                />
-                {analysis?.observation.state === 'insufficient' && (
-                  <p className="stripe-status">No readable stripe pattern in the checked area.</p>
-                )}
-                <details
-                  className="image-options"
-                  open={toolsOpen}
-                  onToggle={(event) => {
-                    setToolsOpen(event.currentTarget.open)
-                    if (!event.currentTarget.open) setSelecting(false)
-                  }}
-                >
-                  <summary>Image tools</summary>
-                  <div className="image-tools">
-                    <div className="tool-group">
-                      <button
-                        className={'tool ' + (analysis && overlay && !changeView ? 'active' : '')}
-                        aria-pressed={!!analysis && overlay && !changeView}
-                        disabled={!analysis || analysis.observation.state !== 'observable'}
-                        onClick={() => {
-                          if (changeView) {
-                            setChangeView(false)
-                            setOverlay(true)
-                          } else setOverlay((value) => !value)
+                <div className="viewer-shell">
+                  <div className="image-plane">
+                    <img
+                      className="panel-image"
+                      src={capture.url}
+                      alt={`Current dent photo: ${capture.title}`}
+                    />
+                    {region && (
+                      <div
+                        className="dent-region"
+                        style={{
+                          left: `${region.x * 100}%`,
+                          top: `${region.y * 100}%`,
+                          width: `${region.width * 100}%`,
+                          height: `${region.height * 100}%`,
                         }}
                       >
-                        <Layers2 size={15} /> Highlight bends
-                      </button>
-                      {analysis?.change_overlay && (
-                        <button
-                          className={'tool ' + (changeView ? 'active' : '')}
-                          aria-pressed={changeView}
-                          onClick={() => {
-                            setChangeView((value) => !value)
-                            setOverlay(true)
-                          }}
-                        >
-                          Highlight changes
-                        </button>
-                      )}
-                      <button
-                        className={'tool ' + (selecting ? 'active' : '')}
-                        aria-pressed={selecting}
-                        disabled={!!busy}
-                        onClick={() => setSelecting((value) => !value)}
-                      >
-                        <Focus size={15} /> Choose area
-                      </button>
-                      <button
-                        className="tool"
-                        disabled={!!busy}
-                        aria-label="Reset inspection region"
-                        onClick={() => updateRegion(initialRegion)}
-                      >
-                        <RotateCcw size={15} />
-                      </button>
-                    </div>
+                        <span>Suggested dent area</span>
+                      </div>
+                    )}
                   </div>
-                  <details className="region-controls">
-                    <summary>Adjust area</summary>
-                    <div>
-                      {(['x', 'y', 'width', 'height'] as const).map((key) => (
-                        <label key={key}>
-                          {regionLabels[key]}
-                          <input
-                            type="range"
-                            min={key === 'width' || key === 'height' ? 5 : 0}
-                            max={Math.floor(
-                              (1 -
-                                (key === 'x'
-                                  ? region.width
-                                  : key === 'y'
-                                    ? region.height
-                                    : key === 'width'
-                                      ? region.x
-                                      : region.y)) *
-                                100,
-                            )}
-                            value={Math.round(region[key] * 100)}
-                            disabled={!!busy}
-                            onChange={(event) =>
-                              updateRegion({ ...region, [key]: Number(event.target.value) / 100 })
-                            }
-                          />
-                          <output>{Math.round(region[key] * 100)}%</output>
-                        </label>
-                      ))}
-                    </div>
-                  </details>
-                </details>
-                {captures.length > 1 && (
-                  <div className="comparison-controls">
-                    <label htmlFor="previous-capture">Previous photo</label>
-                    <select
-                      id="previous-capture"
-                      value={previousId}
-                      disabled={!!busy}
-                      onChange={(event) => {
-                        clearResult()
-                        setPreviousId(event.target.value)
-                      }}
-                    >
-                      <option value="">None</option>
-                      {captures
-                        .filter((item) => item.id !== selectedId)
-                        .map((item) => (
-                          <option key={item.id} value={item.id}>
-                            {item.title}
+                </div>
+                {previous && (
+                  <div className="previous-photo">
+                    <button className="text-button" onClick={() => setShowPrevious(!showPrevious)}>
+                      {showPrevious ? 'Hide' : 'View'} previous photo
+                    </button>
+                    {showPrevious && (
+                      <figure>
+                        <img src={previous.url} alt={`Previous photo: ${previous.title}`} />
+                        <figcaption>{previous.title}</figcaption>
+                      </figure>
+                    )}
+                  </div>
+                )}
+                {previousCycle && (
+                  <section className="adjustment" aria-label="Adjustment since previous photo">
+                    <h3>Anything to add? Optional</h3>
+                    <textarea
+                      aria-label="Action since previous photo"
+                      value={note}
+                      onChange={(event) => setNote(event.target.value)}
+                      maxLength={600}
+                      rows={2}
+                      disabled={busy}
+                      placeholder="Describe any known actions. Leave blank if the repair steps are unknown."
+                    />
+                    <label>
+                      Your observation, optional
+                      <select
+                        value={outcome}
+                        disabled={busy}
+                        onChange={(event) => setOutcome(event.target.value as Outcome)}
+                      >
+                        {outcomes.map((item) => (
+                          <option value={item.id} key={item.id}>
+                            {item.label}
                           </option>
                         ))}
-                    </select>
-                    <button
-                      className="button quiet"
-                      disabled={!previous}
-                      onClick={() => setShowBaseline((value) => !value)}
-                    >
-                      <Eye size={16} /> {showBaseline ? 'Hide' : 'View'}
-                    </button>
-                  </div>
+                      </select>
+                    </label>
+                  </section>
                 )}
-                {showBaseline && previous && (
-                  <figure className="baseline">
-                    <img src={previous.url} alt={'Previous photo: ' + previous.title} />
-                  </figure>
-                )}
-                {analysis && analysis.comparison.status !== 'not_requested' && (
-                  <div className={'comparison-result ' + analysis.comparison.status} role="status">
-                    <strong>{statusNames[analysis.comparison.status]}</strong>
-                    {analysis.comparison.status === 'unverified' && (
-                      <p>Repair progress cannot be confirmed from these photos.</p>
-                    )}
-                    {analysis.comparison.status === 'blocked' && (
-                      <p>Use photos with matching framing.</p>
-                    )}
-                    <ChangeSummary comparison={analysis.comparison} />
-                  </div>
-                )}
+                <div className="assess-row">
+                  <span>
+                    {selectedCycle
+                      ? 'Add the next photo after a correction.'
+                      : previousCycle
+                        ? 'Compare with the last successful assessment.'
+                        : 'Your photo is sent only when you assess.'}
+                  </span>
+                  <button
+                    className="button primary"
+                    onClick={() => void assess()}
+                    disabled={
+                      busy ||
+                      configured !== true ||
+                      Boolean(selectedCycle && selectedCycle.id !== latest?.id)
+                    }
+                  >
+                    {busy ? <LoaderCircle size={17} className="spin" /> : <ScanLine size={17} />}
+                    {busy
+                      ? 'Reviewing…'
+                      : previousCycle
+                        ? 'Reassess image'
+                        : selectedCycle
+                          ? 'Assess again'
+                          : 'Assess image'}
+                  </button>
+                </div>
               </>
             ) : (
               <div className="upload-empty">
-                <ImagePlus size={40} aria-hidden="true" />
-                <h3>Add a dent photo</h3>
+                <ImagePlus size={36} />
+                <h3>Start with a dent photo</h3>
+                <p>Get a repair suggestion, make one adjustment, then add the next photo.</p>
                 <button className="button primary" onClick={() => upload.current?.click()}>
-                  <ImagePlus size={17} /> Choose photo
+                  Choose photo
                 </button>
               </div>
             )}
           </section>
-          <div
-            className="result-panel"
-            ref={resultPanel}
-            tabIndex={-1}
-            aria-labelledby="assessment-heading"
-          >
+          <div ref={resultPanel}>
             <GuidancePanel
-              analysis={analysis}
-              guidance={guidance}
-              zenConfigured={zenConfigured}
+              result={result}
               busy={busy}
-              hasPhoto={!!capture}
-              error={assessmentError}
-              showDots={overlay && !changeView && analysis?.observation.state === 'observable'}
+              error={error}
+              showingPrevious={showingPrevious}
+              pendingOutcome={outcome}
+              saved={Boolean(selectedCycle && selectedCycle.id !== latest?.id)}
             />
           </div>
         </div>
         {captures.length > 0 && (
-          <section className="sequence" aria-label="Your photos">
-            <div className="sequence-heading">
-              <h2>Your photos</h2>
-            </div>
+          <section className="sequence">
+            <h2>Case photos</h2>
             <div className="capture-strip">
-              {captures.map((item) => (
-                <button
-                  key={item.id}
-                  className={'capture ' + (selectedId === item.id ? 'selected' : '')}
-                  disabled={!!busy}
-                  onClick={() => chooseCapture(item.id)}
-                  aria-pressed={selectedId === item.id}
-                >
-                  <div>
-                    <img src={item.url} alt="" />
-                  </div>
-                  <strong>{item.title}</strong>
-                </button>
-              ))}
+              {captures.map((item, index) => {
+                const done = cycles.some((cycle) => cycle.captureId === item.id)
+                return (
+                  <button
+                    className={`capture ${item.id === selectedId ? 'selected' : ''}`}
+                    key={item.id}
+                    disabled={busy}
+                    aria-pressed={item.id === selectedId}
+                    onClick={() => {
+                      setSelectedId(item.id)
+                      setError('')
+                      setShowPrevious(false)
+                    }}
+                  >
+                    <div>
+                      <img src={item.url} alt="" />
+                      <span>{done ? 'Assessed' : 'Not assessed'}</span>
+                    </div>
+                    <strong>
+                      {index + 1}. {item.title}
+                    </strong>
+                  </button>
+                )
+              })}
               <button
                 className="capture add-capture"
-                disabled={!!busy}
                 onClick={() => upload.current?.click()}
+                disabled={busy}
               >
-                <ImagePlus size={23} />
-                <strong>Add next photo</strong>
+                <ImagePlus size={24} />
+                Add next photo
               </button>
             </div>
           </section>
         )}
-        {capture && (
-          <details className="session-options">
-            <summary>Save assessment</summary>
-            <div className="session">
-              <div className="session-copy">
-                <label htmlFor="technician-note">Notes, optional</label>
-                <textarea
-                  id="technician-note"
-                  value={note}
-                  rows={2}
-                  placeholder="What changed between photos?"
-                  onChange={(event) => {
-                    setNote(event.target.value)
-                    setSaved(false)
-                  }}
-                />
-              </div>
-              <div className="session-actions">
-                <button
-                  className="button secondary"
-                  disabled={!analysis || !guidance || saved || !!busy}
-                  onClick={saveAssessment}
-                >
-                  {saved && <Check size={16} />}
-                  {saved ? 'Saved in this tab' : 'Save in this tab'}
-                </button>
-                <button className="button quiet" disabled={!entries.length} onClick={exportSession}>
-                  <ArrowDownToLine size={16} /> Download ({entries.length})
-                </button>
-              </div>
-            </div>
-          </details>
-        )}
+        <footer>
+          Keep one dent per case. This tab holds your case until reload; export to keep the record.
+        </footer>
       </main>
-    </div>
+    </>
   )
 }
