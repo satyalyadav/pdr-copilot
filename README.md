@@ -22,19 +22,18 @@ The configured default is DeepSeek V4.1 Flash through OpenCode Go's subscription
 
 ## Try the loop
 
-1. Select **Initial reflection**, then **Assess image**. Yellow-orange dots mark where stripes bend away from fitted straight lines. Open the explanation beneath the pixel measurements.
-2. Request OpenCode guidance if configured, inspect each citation, and record a note. **Save assessment** adds an immutable record to the current tab's session.
-3. Select **Less stripe bending**, confirm the previous capture, then assess again. The fixture's camera and light settings are known. A cyan changed-pixel overlay and a paired bar chart describe the visible difference. Its changing stripe warp is predetermined and does not model a physical repair.
-4. Try **Same image again**, **Camera moved**, and **Light moved**. Identical pixels show no change. Known synthetic motion blocks comparison.
-5. Add your own PNG, JPEG, or WebP photos. Use **Choose area** to drag a rectangle, or use the keyboard sliders. All changed uploaded comparisons remain unverified because the prototype cannot independently observe camera and light pose.
-6. Download the saved assessments as JSON for expert review. Records live in browser memory and disappear on reload. Exports contain the analyzed, resized images and overlays, guidance provenance, sources, selections, and technician notes. Original upload files are not retained on the server or included in the export.
+1. The app starts with an empty upload panel. Choose your own PNG, JPEG, or WebP dent photo. No sample images are loaded.
+2. Click **Assess image**. Yellow-orange dots mark stripe departures inside the centered inspection box. **Choose area** and the sliders optionally let you move or resize that box when it misses the area you want to inspect.
+3. Request OpenCode image review, inspect the cited guidance, and optionally write a note. **Save assessment** keeps the current image, results, and note together in this tab.
+4. Add a later photo after an adjustment. Use **Compare with** to choose the earlier capture. Changed uploaded comparisons remain unverified because the prototype cannot independently confirm camera and light stability. **Your photos** contains only your uploads.
+5. Download saved assessments as JSON to preserve the images, overlays, guidance, sources, selections, and notes. Reloading clears the current tab. Original upload files are not retained on the server or included in the export.
 
 Up to 12 uploads per session, 12 MB each, and 20 million pixels per image. Images must be at least 64 pixels wide and tall. Analysis resizes images to fit 960 by 720 pixels. Equality and dimension checks use the original decoded images before resizing. Pixel measurements refer to that resized image. The overlay expects near-vertical continuous bright stripes. General dent photos can produce insufficient evidence, and ordinary body curvature can produce stripe residuals.
 
 ## What is demonstrated
 
 - Deterministic stripe tracing and a transparent, image-space departure overlay.
-- Conservative comparison states with labeled synthetic fixtures and upload support.
+- An upload-first interface with conservative comparison states. Synthetic fixtures remain available to backend regression tests and are not loaded by the UI.
 - OpenCode multimodal selection of predefined visual findings and curated inspection steps. The backend validates source IDs and rejects extra fields. The UI renders vetted text, not unrestricted repair instructions.
 - Two curated source summaries with original links and locators. This is a small document collection, not a general search engine. OEM statements are historical and current vehicle-specific applicability remains unresolved.
 - Local source-backed templates with explicit provenance, session notes, and JSON export.

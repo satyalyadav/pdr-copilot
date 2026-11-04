@@ -1016,3 +1016,31 @@ textarea::placeholder {
     font-size: 11px;
   }
 }
+
+.upload-empty {
+  min-height: 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  padding: 40px 24px;
+  text-align: center;
+  border-top: 1px solid #e2e9eb;
+  background: #f8fafb;
+  color: #526f7c;
+}
+.upload-empty > svg {
+  color: #7a9da9;
+}
+.upload-empty h3 {
+  font-size: 23px;
+  color: #1c3038;
+}
+.upload-empty p {
+  max-width: 38ch;
+  font-size: 14px;
+}
+.upload-empty small {
+  font-size: 11px;
+}

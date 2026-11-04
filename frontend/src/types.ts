@@ -1,12 +1,10 @@
 export type Region = { x: number; y: number; width: number; height: number }
-export type Demo = { id: string; title: string; note: string; url: string }
 export type Capture = {
   id: string
   title: string
   note: string
   url: string
-  demoId?: string
-  file?: File
+  file: File
   timestamp: string
 }
 export type Source = {

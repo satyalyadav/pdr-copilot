@@ -51,7 +51,7 @@ export function GuidancePanel({
       ) : (
         <div className="empty-evidence">
           <ScanLine size={31} />
-          <p>Click Assess image to find and highlight bends in the stripes inside your box.</p>
+          <p>Upload your photo, then click Assess image to inspect the reflected stripes.</p>
         </div>
       )}
       <div className="guidance-divider" />

@@ -2,10 +2,8 @@ import type { Capture, Region } from './types'
 
 export function captureForm(capture: Capture, region: Region, previous?: Capture): FormData {
   const form = new FormData()
-  if (capture.demoId) form.set('demo_id', capture.demoId)
-  else if (capture.file) form.set('image', capture.file)
-  if (previous?.demoId) form.set('previous_demo_id', previous.demoId)
-  else if (previous?.file) form.set('previous_image', previous.file)
+  form.set('image', capture.file)
+  if (previous) form.set('previous_image', previous.file)
   form.set('region', JSON.stringify(region))
   return form
 }

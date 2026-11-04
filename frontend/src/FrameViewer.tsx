@@ -72,7 +72,7 @@ export function FrameViewer({
         <img
           className="panel-image"
           src={analysis?.image ?? capture.url}
-          alt={`${capture.title}. ${capture.demoId ? 'Computer-generated reflection stripes.' : 'Uploaded inspection photo.'}`}
+          alt={`${capture.title}. Uploaded inspection photo.`}
           draggable={false}
         />
         {analysis && overlay && (
