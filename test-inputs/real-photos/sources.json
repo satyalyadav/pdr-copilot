@@ -1,0 +1,116 @@
+[
+  {
+    "file": "white-door-before.webp",
+    "page": "https://www.dentrepaircharlotte.com/before-and-after",
+    "image_url": "https://www.dentrepaircharlotte.com/_next/static/immutable/media/mobile-door-crease-repair-white-suv-provincetowne-charlotte-nc-before.2fv5-9yn693j1.webp",
+    "publisher_alt": "Long crease across the driver's door of a white SUV before repair.",
+    "bytes": 32058,
+    "source": "Dent Press",
+    "pairing": "Publisher presents these as before/after; capture conditions unverified",
+    "reuse_license": "not verified"
+  },
+  {
+    "file": "white-door-after.webp",
+    "page": "https://www.dentrepaircharlotte.com/before-and-after",
+    "image_url": "https://www.dentrepaircharlotte.com/_next/static/immutable/media/mobile-door-crease-repair-white-suv-provincetowne-charlotte-nc-after.0h6e1vhmqrpg-.webp",
+    "publisher_alt": "The same white SUV door after repair, the crease gone.",
+    "bytes": 48780,
+    "source": "Dent Press",
+    "pairing": "Publisher presents these as before/after; capture conditions unverified",
+    "reuse_license": "not verified"
+  },
+  {
+    "file": "rivian-tailgate-before.webp",
+    "page": "https://www.dentrepaircharlotte.com/before-and-after",
+    "image_url": "https://www.dentrepaircharlotte.com/_next/static/immutable/media/rivian-r1t-tailgate-dent-repair-mint-hill-nc-before.22uoyurv33x0e.webp",
+    "publisher_alt": "Large dent distorting the reflection on the tailgate of a forest green Rivian R1T.",
+    "bytes": 78844,
+    "source": "Dent Press",
+    "pairing": "Publisher presents these as before/after; capture conditions unverified",
+    "reuse_license": "not verified"
+  },
+  {
+    "file": "rivian-tailgate-after.webp",
+    "page": "https://www.dentrepaircharlotte.com/before-and-after",
+    "image_url": "https://www.dentrepaircharlotte.com/_next/static/immutable/media/rivian-r1t-tailgate-dent-repair-mint-hill-nc-after.34p90diwgnm_h.webp",
+    "publisher_alt": "The same Rivian R1T tailgate after repair, reflecting cleanly.",
+    "bytes": 156814,
+    "source": "Dent Press",
+    "pairing": "Publisher presents these as before/after; capture conditions unverified",
+    "reuse_license": "not verified"
+  },
+  {
+    "file": "blue-quarter-before.webp",
+    "page": "https://www.dentrepaircharlotte.com/before-and-after",
+    "image_url": "https://www.dentrepaircharlotte.com/_next/static/immutable/media/crease-dent-repair-blue-rear-quarter-panel-mint-hill-nc-before.2ppjrv8fkbqv2.webp",
+    "publisher_alt": "Severe crease folded into the rear quarter panel of a blue vehicle, beside the taillight.",
+    "bytes": 170152,
+    "source": "Dent Press",
+    "pairing": "Publisher presents these as before/after; capture conditions unverified",
+    "reuse_license": "not verified"
+  },
+  {
+    "file": "blue-quarter-after.webp",
+    "page": "https://www.dentrepaircharlotte.com/before-and-after",
+    "image_url": "https://www.dentrepaircharlotte.com/_next/static/immutable/media/crease-dent-repair-blue-rear-quarter-panel-mint-hill-nc-after.03b-xfjd76nie.webp",
+    "publisher_alt": "The same blue quarter panel after repair, reflection running unbroken.",
+    "bytes": 151740,
+    "source": "Dent Press",
+    "pairing": "Publisher presents these as before/after; capture conditions unverified",
+    "reuse_license": "not verified"
+  },
+  {
+    "file": "denttime-rivian-before.webp",
+    "page": "https://denttime.com/",
+    "image_url": "https://denttime.com/media/repairs/rivian-before.webp",
+    "source": "Dent Time",
+    "bytes": 61624,
+    "pairing": "Publisher presents corresponding before/result; no intermediate stages verified",
+    "reuse_license": "not verified"
+  },
+  {
+    "file": "denttime-rivian-after.webp",
+    "page": "https://denttime.com/",
+    "image_url": "https://denttime.com/media/repairs/rivian-after.webp",
+    "source": "Dent Time",
+    "bytes": 104816,
+    "pairing": "Publisher presents corresponding before/result; no intermediate stages verified",
+    "reuse_license": "not verified"
+  },
+  {
+    "file": "denttime-silver-door-before.webp",
+    "page": "https://denttime.com/",
+    "image_url": "https://denttime.com/media/tiers-bigdent/large-dent-before-paintless-repair.webp",
+    "source": "Dent Time",
+    "bytes": 38344,
+    "pairing": "Publisher presents corresponding before/result; no intermediate stages verified",
+    "reuse_license": "not verified"
+  },
+  {
+    "file": "denttime-silver-door-after.webp",
+    "page": "https://denttime.com/",
+    "image_url": "https://denttime.com/media/tiers-bigdent/premium.webp",
+    "source": "Dent Time",
+    "bytes": 45782,
+    "pairing": "Publisher presents corresponding before/result; no intermediate stages verified",
+    "reuse_license": "not verified"
+  },
+  {
+    "file": "denttime-reflection-before.webp",
+    "page": "https://denttime.com/door-ding-repair/",
+    "image_url": "https://denttime.com/media/door-ding-before.webp",
+    "source": "Dent Time",
+    "bytes": 105858,
+    "pairing": "Publisher presents corresponding before/result; no intermediate stages verified",
+    "reuse_license": "not verified"
+  },
+  {
+    "file": "denttime-reflection-after.jpg",
+    "page": "https://denttime.com/door-ding-repair/",
+    "image_url": "https://denttime.com/media/door-ding-after.jpg",
+    "source": "Dent Time",
+    "bytes": 105604,
+    "pairing": "Publisher presents corresponding before/result; no intermediate stages verified",
+    "reuse_license": "not verified"
+  }
+]

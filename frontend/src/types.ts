@@ -44,6 +44,7 @@ export type Analysis = {
 export type Guidance = {
   mode: 'local' | 'zen'
   label: string
+  finding_ids: string[]
   findings: string[]
   steps: { id: string; title: string; text: string; source_ids: string[] }[]
   sources: Source[]

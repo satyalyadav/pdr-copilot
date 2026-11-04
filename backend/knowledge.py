@@ -62,6 +62,7 @@ def guidance_payload(mode: str, step_ids: list[str], findings: list[str]) -> dic
         "label": "Local source-backed template"
         if mode == "local"
         else "OpenCode Go image review with curated inspection guidance",
+        "finding_ids": findings,
         "findings": [FINDINGS[kind] for kind in findings],
         "steps": steps,
         "sources": [source for source in SOURCES if source["id"] in cited],

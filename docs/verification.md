@@ -4,7 +4,9 @@ Checked locally on November 4, 2026. Scope: the working prototype in CONTEXT.md,
 
 ## Observed behavior
 
-- The final suite passed all 14 API tests. Python typechecking, linting, and formatting checks passed for the backend and runner. Frontend formatting, TypeScript checks, and the production React build passed. Exact commands and completed output are retained in `.audit/final-checks.log`.
+- The final suite passed all 15 API tests. Python typechecking, linting, and formatting checks passed for the backend and runner. Frontend formatting, TypeScript checks, and the production React build passed. Exact commands and completed output are retained in `.audit/final-checks.log`.
+- Chrome checks of the simplified flow covered upload, one-click assessment with a live OpenCode review, the checked-area outline, an in-panel 422 error, saving a note, JSON export, previous-photo comparison, and a 390-pixel viewport with no horizontal overflow. `/`, `/health`, and `/api/health` return 200 for GET and HEAD on port 8000; unknown paths still return 404.
+- Two read-only reviews by Claude Opus 5.5 at high effort checked the UI simplification. The first found three P1 issues: missing limits copy, off-screen assessment errors, and an invisible checked area. All three were fixed; the second review found no remaining P0 or P1 issues.
 - API tests passed for unchanged pixels, known synthetic camera/light motion, fixed synthetic changes, malformed input, unverified uploaded comparisons, known citations, invalid model output, provider errors, and timeouts.
 - A real OpenCode Go request using `deepseek-v4.1-flash` returned HTTP 200, predefined visible findings, and valid source-backed inspection steps. An earlier pay-as-you-go request failed for insufficient account funds. The default now uses the user's Go subscription route.
 - Chrome automation followed the UI through image assessment, technician note entry, record creation, JSON export, camera-motion rejection, the unchanged control, synthetic comparison, and a live DeepSeek image review. The downloaded export parsed as JSON and contained the recorded assessment.

@@ -40,7 +40,9 @@ async def load_input(upload: UploadFile | None, demo_id: str | None) -> Captured
         raise HTTPException(422, str(exc)) from exc
 
 
-@app.get("/api/health")
+@app.api_route("/", methods=["GET", "HEAD"], include_in_schema=False)
+@app.api_route("/health", methods=["GET", "HEAD"], include_in_schema=False)
+@app.api_route("/api/health", methods=["GET", "HEAD"])
 def health():
     return {
         "status": "ok",

@@ -1,0 +1,86 @@
+[
+  {
+    "file": ".audit/baseline.png",
+    "state": "observable",
+    "tracked_stripes": 8,
+    "marked_points": 408
+  },
+  {
+    "file": ".audit/later.png",
+    "state": "observable",
+    "tracked_stripes": 8,
+    "marked_points": 398
+  },
+  {
+    "file": "test-inputs/real-photos/blue-quarter-after.webp",
+    "state": "insufficient",
+    "tracked_stripes": 0,
+    "marked_points": 0
+  },
+  {
+    "file": "test-inputs/real-photos/blue-quarter-before.webp",
+    "state": "insufficient",
+    "tracked_stripes": 0,
+    "marked_points": 0
+  },
+  {
+    "file": "test-inputs/real-photos/rivian-tailgate-after.webp",
+    "state": "insufficient",
+    "tracked_stripes": 0,
+    "marked_points": 0
+  },
+  {
+    "file": "test-inputs/real-photos/rivian-tailgate-before.webp",
+    "state": "insufficient",
+    "tracked_stripes": 0,
+    "marked_points": 0
+  },
+  {
+    "file": "test-inputs/real-photos/white-door-after.webp",
+    "state": "insufficient",
+    "tracked_stripes": 0,
+    "marked_points": 0
+  },
+  {
+    "file": "test-inputs/real-photos/white-door-before.webp",
+    "state": "insufficient",
+    "tracked_stripes": 0,
+    "marked_points": 0
+  },
+  {
+    "file": "test-inputs/real-photos/denttime-rivian-before.webp",
+    "state": "insufficient",
+    "tracked_stripes": 0,
+    "marked_points": 0
+  },
+  {
+    "file": "test-inputs/real-photos/denttime-rivian-after.webp",
+    "state": "insufficient",
+    "tracked_stripes": 0,
+    "marked_points": 0
+  },
+  {
+    "file": "test-inputs/real-photos/denttime-silver-door-before.webp",
+    "state": "insufficient",
+    "tracked_stripes": 0,
+    "marked_points": 0
+  },
+  {
+    "file": "test-inputs/real-photos/denttime-silver-door-after.webp",
+    "state": "insufficient",
+    "tracked_stripes": 0,
+    "marked_points": 0
+  },
+  {
+    "file": "test-inputs/real-photos/denttime-reflection-before.webp",
+    "state": "insufficient",
+    "tracked_stripes": 0,
+    "marked_points": 0
+  },
+  {
+    "file": "test-inputs/real-photos/denttime-reflection-after.jpg",
+    "state": "insufficient",
+    "tracked_stripes": 1,
+    "marked_points": 53
+  }
+]

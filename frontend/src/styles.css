@@ -1044,3 +1044,198 @@ textarea::placeholder {
 .upload-empty small {
   font-size: 11px;
 }
+
+/* Keep the photo and assessment visible without implementation details. */
+.page-intro {
+  margin-bottom: 20px;
+}
+.page-intro h1 {
+  font-size: 30px;
+  margin: 0;
+}
+.section-toolbar {
+  padding: 16px 20px;
+  flex-wrap: wrap;
+}
+.section-toolbar > h2 {
+  flex: 1;
+  min-width: 160px;
+  overflow-wrap: anywhere;
+  font-size: 15px;
+  margin: 0;
+}
+.photo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.viewer-shell {
+  padding: 12px;
+}
+.panel-image {
+  max-height: 570px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+.image-plane {
+  width: fit-content;
+}
+.image-options {
+  padding: 12px 20px;
+  border-top: 1px solid #e2e9eb;
+}
+.image-options > summary,
+.session-options > summary {
+  font-size: 13px;
+  color: #526f7c;
+}
+.image-options .image-tools {
+  padding: 12px 0 4px;
+  border: 0;
+  background: transparent;
+}
+.stripe-status {
+  margin: 8px 0;
+  color: #526f7c;
+  font-size: 13px;
+}
+.inspection > .stripe-status {
+  padding: 0 20px;
+}
+.image-options .region-controls {
+  margin-top: 12px;
+  padding: 8px 12px;
+}
+.result-panel {
+  scroll-margin-top: 24px;
+  outline: none;
+}
+.guidance {
+  padding: 20px;
+  border: 1px solid #d2dde0;
+  border-radius: 10px;
+  background: #fff;
+}
+.guidance-heading {
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.guidance-heading h2 {
+  font-size: 21px;
+  margin: 0;
+}
+.assessment-badge {
+  font-size: 12px;
+  color: #245a70;
+  background: #e1ebef;
+  padding: 4px 9px;
+  border-radius: 4px;
+}
+.review-loading {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 32px 0;
+  color: #276779;
+}
+.assessment-placeholder,
+.assessment-note {
+  margin-top: 20px;
+  color: #526f7c;
+  font-size: 14px;
+}
+.assessment-error {
+  margin: 18px 0 0;
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: #fdecec;
+  color: #8a2d2d;
+  font-size: 14px;
+}
+.guidance-limits {
+  margin: 0 0 18px;
+  color: #526f7c;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.model-findings {
+  font-size: 15px;
+  line-height: 1.6;
+  margin-top: 20px;
+  padding: 14px;
+}
+.next-checks-title {
+  font-size: 13px;
+  color: #526f7c;
+  margin-top: 24px;
+}
+.inspection-steps {
+  list-style: decimal;
+  padding-left: 22px;
+  margin: 12px 0 20px;
+}
+.inspection-steps li {
+  padding: 0 0 12px 5px;
+}
+.inspection-steps h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+}
+.source-library {
+  margin-top: 16px;
+  border-top: 1px solid #e2e9eb;
+  padding-top: 14px;
+  font-size: 13px;
+}
+.source-library > a {
+  display: block;
+  padding-top: 10px;
+}
+.sequence {
+  margin-top: 24px;
+}
+.capture > div {
+  margin-bottom: 6px;
+}
+.session-options {
+  margin-top: 22px;
+  border-top: 1px solid #c4d5dd;
+  padding-top: 16px;
+}
+.session {
+  margin-top: 0;
+  padding: 0 0 12px;
+  border: 0;
+}
+.session-copy > label {
+  margin-top: 16px;
+}
+.session-actions {
+  align-self: end;
+}
+@media (max-width: 760px) {
+  .photo-actions {
+    width: 100%;
+  }
+  .photo-actions .primary {
+    flex: 1;
+  }
+  .section-toolbar {
+    padding: 14px;
+  }
+  .panel-image {
+    max-height: 430px;
+  }
+  .guidance {
+    margin-top: 16px;
+    padding: 18px;
+  }
+  .page-intro h1 {
+    font-size: 27px;
+  }
+  .comparison-controls .button {
+    font-size: 12px;
+  }
+}

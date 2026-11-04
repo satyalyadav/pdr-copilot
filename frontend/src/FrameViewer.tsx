@@ -11,6 +11,7 @@ export function FrameViewer({
   overlay,
   changeView,
   selecting,
+  showRegion,
   disabled,
 }: {
   capture: Capture
@@ -20,6 +21,7 @@ export function FrameViewer({
   changeView: boolean
   overlay: boolean
   selecting: boolean
+  showRegion: boolean
   disabled: boolean
 }) {
   const container = useRef<HTMLDivElement>(null)
@@ -87,27 +89,19 @@ export function FrameViewer({
             draggable={false}
           />
         )}
-        <div
-          className="inspection-region"
-          style={{
-            left: `${active.x * 100}%`,
-            top: `${active.y * 100}%`,
-            width: `${active.width * 100}%`,
-            height: `${active.height * 100}%`,
-          }}
-        >
-          <span>Inspection area</span>
-        </div>
-      </div>
-      <div className="viewer-caption">
-        {analysis && overlay && <span className={`legend-dot ${changeView ? 'changes' : ''}`} />}{' '}
-        {!analysis
-          ? 'Click Assess image to add yellow-orange dots where the stripes bend.'
-          : overlay
-            ? changeView
-              ? 'Cyan marks show changed pixels, not repair progress.'
-              : 'Yellow-orange dots show where stripes bend away from a fitted straight line.'
-            : 'Bend markers are hidden. Click Highlight bends to show them.'}
+        {(showRegion || selecting) && (
+          <div
+            className="inspection-region"
+            style={{
+              left: `${active.x * 100}%`,
+              top: `${active.y * 100}%`,
+              width: `${active.width * 100}%`,
+              height: `${active.height * 100}%`,
+            }}
+          >
+            <span>{selecting ? 'Drag to set area' : 'Checked area'}</span>
+          </div>
+        )}
       </div>
     </div>
   )

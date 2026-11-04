@@ -53,6 +53,7 @@ def test_live_image_review_returns_only_supported_cited_steps(monkeypatch):
         assert response.status_code == 200
         result = response.json()
         assert result["mode"] == "zen"
+        assert result["finding_ids"] == ["stripe_curvature"]
         assert "curved" in result["findings"][0]
         assert result["steps"][0]["source_ids"] == ["ding-king-lighting"]
         assert result["repair_actions_validated"] is False

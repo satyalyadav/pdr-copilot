@@ -1,131 +1,110 @@
-import { LoaderCircle, ScanLine, Sparkles } from 'lucide-react'
+import { LoaderCircle } from 'lucide-react'
 import type { Analysis, Guidance } from './types'
+
+const stepTitles: Record<string, string> = {
+  confirm_lighting: 'Check the lighting',
+  recapture: 'Take a clearer photo',
+  inspect_paint: 'Have the paint checked',
+  verify_procedure: "Check the vehicle's repair procedure",
+}
+
+const findingLabels: Record<string, string> = {
+  stripe_curvature: 'Some reflected lines appear curved.',
+  readable_stripes: 'The reflected lines are visible.',
+  glare: 'Glare may obscure part of the photo.',
+  occlusion: 'Part of the view may be blocked.',
+  uncertain: 'A clearer view is needed.',
+}
+
+function findingText(id: string | undefined, fallback: string): string {
+  return (id && findingLabels[id]) || fallback
+}
 
 export function GuidancePanel({
   analysis,
   guidance,
   zenConfigured,
   busy,
-  onZen,
+  hasPhoto,
+  error,
+  showDots,
 }: {
   analysis: Analysis | null
   guidance: Guidance | null
   zenConfigured: boolean
   busy: string | null
-  onZen: () => void
+  hasPhoto: boolean
+  error: string
+  showDots: boolean
 }) {
   return (
-    <aside className="guidance" aria-label="Inspection evidence and guidance">
+    <aside className="guidance" aria-label="Assessment results">
       <div className="guidance-heading">
-        <span className="step-marker">1</span>
-        <div>
-          <h2>What is visible</h2>
-          <p>Computed image evidence</p>
-        </div>
+        <h2 id="assessment-heading">Assessment</h2>
+        {!busy && guidance && (
+          <span className="assessment-badge">
+            {guidance.mode === 'zen' ? 'AI review' : 'Basic checklist'}
+          </span>
+        )}
       </div>
-      {analysis ? (
-        <>
-          <p className="observation-text">{analysis.observation.summary}</p>
-          <dl className="evidence">
-            <div>
-              <dt>Usable stripe tracks</dt>
-              <dd>{analysis.observation.tracked_stripes}</dd>
-            </div>
-            <div>
-              <dt>Mean reference departure</dt>
-              <dd>
-                {analysis.observation.mean_deviation_px === null
-                  ? 'Unavailable'
-                  : `${analysis.observation.mean_deviation_px.toFixed(2)} px`}
-              </dd>
-            </div>
-          </dl>
-          <details className="method">
-            <summary>How the dots are calculated</summary>
-            <p>
-              {analysis.observation.reference} This pixel proxy is not depth or a repair-quality
-              score.
-            </p>
-          </details>
-        </>
-      ) : (
-        <div className="empty-evidence">
-          <ScanLine size={31} />
-          <p>Upload your photo, then click Assess image to inspect the reflected stripes.</p>
-        </div>
-      )}
-      <div className="guidance-divider" />
-      <div className="guidance-heading">
-        <span className="step-marker">2</span>
-        <div>
-          <h2>What to inspect next</h2>
-          <p>{guidance?.label ?? 'Source-backed inspection guidance'}</p>
-        </div>
-      </div>
-      {guidance ? (
-        <>
-          {guidance.findings.length > 0 && (
-            <div className="model-findings">
-              {guidance.findings.map((finding) => (
-                <p key={finding}>{finding}</p>
+      <div className="assessment-content" aria-live="polite" aria-atomic="true">
+        {error && (
+          <p className="assessment-error" role="alert">
+            {error}
+          </p>
+        )}
+        {busy ? (
+          <div className="review-loading">
+            <LoaderCircle className="spin" size={24} />
+            <p>{busy === 'zen' ? 'Reviewing your photo...' : 'Checking your photo...'}</p>
+          </div>
+        ) : guidance ? (
+          <>
+            {guidance.mode === 'zen' && (guidance.finding_ids?.length ?? 0) > 0 && (
+              <div className="model-findings">
+                {guidance.finding_ids.map((id, index) => (
+                  <p key={id}>{findingText(id, guidance.findings[index] ?? '')}</p>
+                ))}
+              </div>
+            )}
+            {guidance.mode === 'local' && (
+              <p className="assessment-note">
+                {zenConfigured
+                  ? 'AI review was not completed. Basic checks are shown below.'
+                  : 'AI review is unavailable. Basic checks are shown below.'}
+              </p>
+            )}
+            <h3 className="next-checks-title">Next checks</h3>
+            <ol className="inspection-steps">
+              {guidance.steps.map((step) => (
+                <li key={step.id}>
+                  <h3>{stepTitles[step.id] ?? step.title}</h3>
+                </li>
               ))}
-            </div>
-          )}
-          <ol className="inspection-steps">
-            {guidance.steps.map((step) => (
-              <li key={step.id}>
-                <h3>{step.title}</h3>
-                <p>{step.text}</p>
-                <div className="source-links">
-                  {step.source_ids.map((id) => {
-                    const source = guidance.sources.find((item) => item.id === id)
-                    return (
-                      source && (
-                        <a key={id} href={source.url} target="_blank" rel="noreferrer">
-                          {source.title}
-                        </a>
-                      )
-                    )
-                  })}
-                </div>
-              </li>
-            ))}
-          </ol>
-        </>
-      ) : (
-        <p className="muted">
-          An assessment includes a local guidance template. OpenCode can also review the image and
-          select curated inspection guidance.
-        </p>
-      )}
-      <button
-        className="button zen-button"
-        disabled={!analysis || !!busy || !zenConfigured}
-        onClick={onZen}
-      >
-        {busy === 'zen' ? <LoaderCircle size={17} className="spin" /> : <Sparkles size={17} />}
-        {busy === 'zen' ? 'Reviewing image' : 'Send image to OpenCode'}
-      </button>
-      {!zenConfigured && (
-        <p className="privacy-note">
-          AI image review is unavailable until the model connection is set up.
-        </p>
-      )}
-      {guidance && (
-        <details className="source-library">
-          <summary>Read the source passages</summary>
-          {guidance.sources.map((source) => (
-            <article key={source.id}>
-              <a href={source.url} target="_blank" rel="noreferrer">
-                {source.title}
-              </a>
-              <small>{source.locator}</small>
-              <p>{source.passage}</p>
-              <small>{source.status}</small>
-            </article>
-          ))}
-        </details>
-      )}
+            </ol>
+            <p className="guidance-limits">
+              {showDots && 'Dots mark where reflected lines bend. '}
+              This is not a measure of dent depth, repair quality, or progress.
+            </p>
+            <details className="source-library">
+              <summary>Sources</summary>
+              {guidance.sources.map((source) => (
+                <a key={source.id} href={source.url} target="_blank" rel="noreferrer">
+                  {source.title}
+                </a>
+              ))}
+            </details>
+          </>
+        ) : (
+          <p className="assessment-placeholder">
+            {!hasPhoto
+              ? 'Add a photo and click Assess image.'
+              : analysis
+                ? 'Click Assess image to try again.'
+                : 'Click Assess image to review this photo.'}
+          </p>
+        )}
+      </div>
     </aside>
   )
 }

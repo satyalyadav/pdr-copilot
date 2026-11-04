@@ -11,11 +11,11 @@ Test boundaries confirmed by the user on November 4, 2026:
 
 ## Design
 
-The reflection image occupies most of the screen. A narrow right column explains observations and the next inspection. The bottom timeline supports repeated assessments and makes the selected comparison explicit. Text aligns left.
+The uploaded photo occupies most of the screen. The Assessment panel sits beside it on desktop and below it on mobile. One **Assess image** action runs the local check, then the model review when a backend key is configured. The checked area is outlined on the photo. The **Your photos** strip supports repeated captures and makes the selected comparison explicit. Text aligns left and stays minimal.
 
 Use a workshop palette: fog #edf1f2, steel #c3ced1, ink #1c3038, petrol #276779, and signal amber #b46617. Use Trebuchet MS for headings, with the operating system sans serif for controls and reading. The image and inspection region carry the visual emphasis. Avoid dashboard statistics that suggest repair quality.
 
-Show source provenance, synthetic status, and blocked comparisons beside the relevant result. An offline path explains computed image evidence with curated sources and clearly identifies itself as a local template. Live guidance requires an explicit request and sends the selected image to OpenCode.
+Show source provenance, synthetic status, and blocked comparisons beside the relevant result. An offline path labels itself as a basic checklist and shows curated sources. Live guidance sends the selected image to OpenCode only after the user clicks **Assess image**.
 
 ## Delivery checks
 

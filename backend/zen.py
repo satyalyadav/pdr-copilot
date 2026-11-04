@@ -93,12 +93,12 @@ async def select_guidance(
             return ModelSelection.model_validate_json(content)
     except httpx.TimeoutException as exc:
         raise HTTPException(
-            504, "OpenCode timed out. Retry explicitly or use local guidance."
+            504, "OpenCode timed out. Retry the assessment. The basic checklist is still available."
         ) from exc
     except httpx.HTTPStatusError as exc:
         raise HTTPException(
             502,
-            "OpenCode rejected the request. Check the backend key, model, credits, and endpoint. Local guidance is available.",
+            "OpenCode rejected the request. Check the backend key, model, credits, and endpoint. The basic checklist is still available.",
         ) from exc
     except (
         httpx.RequestError,
@@ -110,5 +110,5 @@ async def select_guidance(
     ) as exc:
         raise HTTPException(
             502,
-            "OpenCode returned no valid source-backed inspection selection. Use local guidance or retry.",
+            "OpenCode returned no valid source-backed inspection selection. Retry the assessment; the basic checklist is still available.",
         ) from exc
