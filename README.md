@@ -16,6 +16,19 @@ cp .env.example .env
 
 Open http://localhost:5173. The API listens on 127.0.0.1:8000. The supervised runner stops both servers after four hours or Ctrl+C. `PDR_DEV_SECONDS=28800 ./scripts/dev.sh` allows eight hours. Ownership and deadlines are recorded in `.audit/jobs.log`. Restart the runner after backend changes.
 
+## Share for an interview
+
+Stop this project's dev runner, build the frontend, then run:
+
+```bash
+npm --prefix frontend run build
+./scripts/share.sh
+```
+
+The sharing runner serves the built app at `/` and the slides at `/presentation/` through one temporary Cloudflare HTTPS URL. It needs `cloudflared` on PATH or the T3-managed installation. The backend key stays on the server. Anyone with the link can use the app, including assessments through the configured model provider.
+
+Keep this machine online. Ctrl+C stops the server and tunnel; they also stop automatically after eight hours. Set `PDR_SHARE_SECONDS` before starting to change that deadline. The URL changes on restart. The current URL, deadline, PID and safe stop command are in `.audit/share-runtime.json`; logs are in `.audit/share-*.log`. Static app changes require another frontend build. Presentation edits appear on refresh. Quick Tunnels have no uptime guarantee.
+
 The key stays on the backend. The configured model is DeepSeek V4.1 Flash through OpenCode Go; model and endpoint remain configurable. The app keeps an honest user agent and session ID. It does not change billing or privacy settings, switch providers, retry automatically, or replace failed model output with a fabricated assessment.
 
 ## Use the loop
@@ -25,15 +38,21 @@ The key stays on the backend. The configured model is DeepSeek V4.1 Flash throug
 3. Add the next photo and select **Reassess image**. Action notes and your own observations are optional; the system assesses the result. A reported raised spot excludes another pull, and a reported coating concern stops corrections without depending on the provider.
 4. Browse **Case photos** and use **Export case** to retain observations, plans and notes as JSON. Export excludes photo bytes. **Reset case** clears the photos, assessments and notes so you can start over without reloading. Keep one dent per case; reloading also clears the tab.
 
-For the primary demonstration, upload `test-inputs/real-photos/denttime-rivian-before.webp`, assess it, then add `denttime-rivian-after.webp`. Leave the action note blank when individual repair steps are unknown. These are recorded shop photos, not a repair caused by this app. Images stay local because reuse permission is unverified. The paired after photo is never included in the first assessment.
+For the primary demonstration, upload `test-inputs/real-photos/denttime-rivian-before.webp`, assess it, then add `denttime-rivian-after.webp`. Leave the action note blank when individual repair steps are unknown. These are recorded shop photos, not a repair caused by this app. The paired after photo is never included in the first assessment.
+
+The **More photo examples** gallery below the photo workspace shows five other shop pairs and saved AI guidance. It excludes the presentation's Rivian pair and the Dent Time reflection pair. Each before assessment saw only the before photo; each after assessment used both photos and the first assessment, with no claimed tool actions. Opening the gallery makes no model calls. Source links appear on each example; reuse licenses remain unverified in `test-inputs/real-photos/sources.json`.
+
+Expand **Guidance sources** below the examples for all four repair references and a short description of each. The list comes from the backend's source catalog and is available without an uploaded photo. Each assessment also lists the references used for its selected repair card.
+
+`timeout -k 10s 1800s uv run python -m scripts.record_examples` records missing stages sequentially and exports the gallery data and original photo copies into `frontend/src/`. Rebuild the frontend afterward. The recorder keeps checkpoints in `.audit/gallery-ai.json` and refuses to repeat an unfinished request without review. Ten new model calls are needed for a fresh gallery recording; a completed checkpoint exports again without calling the model.
 
 ## Precision demo
 
-Select **Precision demo** to try the calibrated synthetic setup. Switch between **Original dent**, **Scripted improvement** and **Unchanged control**. The reflected stripes and the reconstructed center profile update together. The known synthetic shape is drawn beside the estimate so the result can be checked.
+Select **Precision demo** to try the calibrated synthetic setup. Switch between **Before**, **Simulated improvement** and **Same images**. The reflected stripes and the reconstructed center profile update together. The known synthetic shape is drawn beside the estimate so the result can be checked.
 
 A virtual pinhole camera observes a reflective panel and an active stripe screen at known positions. The renderer applies the law of reflection. OpenCV decodes 16 phase-shifted images, and reflection geometry plus numerical integration recovers height using the flat outer edge as the zero reference. The reconstruction receives only those images and the calibration, not the prescribed dent depth or shape.
 
-This mode generates its images locally and uses the existing repair cards without an LLM call or new dependencies. The stage change is predefined. It demonstrates measurement in an ideal calibrated simulation, not a predicted repair, real-world accuracy, or calibrated measurements from the ordinary car photos. The normal photo copilot remains a separate mode and retains its case when switching views.
+This mode generates and measures its images locally without an LLM call or new dependencies. The stage change is predefined. It demonstrates measurement in an ideal calibrated simulation, not a predicted repair, real-world accuracy, or calibrated measurements from the ordinary car photos. The normal photo copilot remains a separate mode and retains its case when switching views.
 
 A short explanation for the interview: "Known geometry lets us turn reflected patterns into a shape estimate. We compare it with the synthetic truth, then repeat after a scripted change."
 

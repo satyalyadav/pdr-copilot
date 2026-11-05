@@ -3,6 +3,8 @@ import { Download, ImagePlus, LoaderCircle, RotateCcw, ScanLine } from 'lucide-r
 import { request } from './api'
 import { GuidancePanel } from './GuidancePanel'
 import { PrecisionDemo } from './PrecisionDemo'
+import { PhotoExamples } from './PhotoExamples'
+import { GuidanceSources } from './GuidanceSources'
 import type { Capture, CaseContext, CopilotResult, Cycle, Outcome } from './types'
 
 const caseContext: CaseContext = { vehicle: '', material: 'unknown' }
@@ -458,6 +460,8 @@ export function App() {
                 </div>
               </section>
             )}
+            <PhotoExamples />
+            <GuidanceSources />
             <footer>
               Keep one dent per case. Export to keep the record before resetting or reloading.
             </footer>

@@ -1,0 +1,909 @@
+{
+  "model": "deepseek-v4.1-flash",
+  "examples": {
+    "white-door": {
+      "before": {
+        "file": "white-door-before.webp",
+        "sha256": "634944ed610ae7a6871c180b095a2b6870726ad1d699dffa444fae2a8dd43c6c",
+        "recorded_at": "2026-11-05T15:47:20.499880+00:00",
+        "result": {
+          "mode": "zen",
+          "visible_evidence": "The panel is white, with a door handle at the left, a vertical door gap near the left third, a window line above, and dark lower trim. A vertical creased low with a surrounding shadow sits right of the door gap and below the window line.",
+          "dent_region": {
+            "x": 0.32,
+            "y": 0.34,
+            "width": 0.24,
+            "height": 0.32
+          },
+          "dent_shape": "crease",
+          "assumptions": [
+            "Visible: vertical crease-like reflection break with a surrounding low; exact depth and contact point are not measured.",
+            "Unverified: paint integrity, panel material, and whether this vehicle or procedure permits glue pulling.",
+            "Tool size, adhesive, force, and lamp position are not established by this photo."
+          ],
+          "confidence": "medium",
+          "where_to_work": "On the door skin just right of the vertical door gap, centered below the window line and above the dark lower trim; keep the tab clear of that seam and the lamp setup.",
+          "reason": "The dent reads as a creased low, so an incremental shape-matched crease pull is the conditional next candidate, with suitability still unverified.",
+          "comparison": null,
+          "selection": {
+            "visible_evidence": "The panel is white, with a door handle at the left, a vertical door gap near the left third, a window line above, and dark lower trim. A vertical creased low with a surrounding shadow sits right of the door gap and below the window line.",
+            "dent_region": {
+              "x": 0.32,
+              "y": 0.34,
+              "width": 0.24,
+              "height": 0.32
+            },
+            "dent_shape": "crease",
+            "assumptions": [
+              "Visible: vertical crease-like reflection break with a surrounding low; exact depth and contact point are not measured.",
+              "Unverified: paint integrity, panel material, and whether this vehicle or procedure permits glue pulling.",
+              "Tool size, adhesive, force, and lamp position are not established by this photo."
+            ],
+            "confidence": "medium",
+            "card_id": "crease_pull",
+            "where_to_work": "On the door skin just right of the vertical door gap, centered below the window line and above the dark lower trim; keep the tab clear of that seam and the lamp setup.",
+            "reason": "The dent reads as a creased low, so an incremental shape-matched crease pull is the conditional next candidate, with suitability still unverified.",
+            "comparison": null
+          },
+          "status": "proposal",
+          "next_action": {
+            "id": "crease_pull",
+            "title": "Reduce the crease with an incremental glue pull",
+            "kind": "repair",
+            "shapes": ["crease"],
+            "tools": "Controlled glue-pull lifter, compatible flexible crease tab, adhesive and release agent, PDR light",
+            "approach": "Start reducing the creased low with a shape-matched flexible tab. Reassess before progressing to narrower detail work.",
+            "steps": [
+              "Find the creased low at the displayed landmarks. Align a compatible flexible crease tab along it; the outline locates damage and is not a tab-placement guide.",
+              "Follow the glue system's preparation and attachment instructions, then set the lifter using its product instructions.",
+              "Apply one small controlled lift. Release the adhesive as instructed and stop before the low becomes a raised ridge.",
+              "Add the next photo and any action note. The copilot will assess the crease and surrounding depression before choosing the next adjustment."
+            ],
+            "expected_change": "The crease and surrounding depression should soften. Remaining distortion may need further work; a complete repair is not expected from one lift.",
+            "stop_when": "Stop if paint changes, a ridge rises, the tab cannot be aligned on the low, or the lifter cannot be supported as specified. Do not bridge a panel seam.",
+            "source_ids": ["keco-controlled-pulls", "rivian-pdr-2023"],
+            "scope": "Prototype adaptation of a manufacturer technique for visible creased lows. This vehicle's suitability and exact tool setup are not established by the image."
+          },
+          "physical_preconditions": [
+            "The applicable vehicle procedure and panel material must permit the method; the historical Rivian statement is not current authorization.",
+            "The coating must pass the required inspection, and the tool and adhesive setup must follow their product instructions."
+          ],
+          "sources": [
+            {
+              "id": "rivian-pdr-2023",
+              "title": "Rivian PDR statement",
+              "url": "https://oemonestop.com/sites/default/files/Rivian_POS_Paintless-Dent-Repair%282-2-23%29.pdf",
+              "locator": "RCI-52-22-002-2, page 1, February 2, 2023",
+              "status": "Historical OEM statement. Indexed text checked November 4, 2026. Current vehicle-specific applicability remains unresolved.",
+              "passage": "For 2022+ R1T and R1S vehicles, the statement requires 30X paint checks before and after repair, prohibits modifying panels for access, and favors non-damaging glue pulling. Material restrictions and the current vehicle procedure must be checked separately. A photograph cannot establish paint compliance."
+            },
+            {
+              "id": "keco-controlled-pulls",
+              "title": "KECO precision lifter demonstration",
+              "url": "https://www.kecotabs.com/blogs/all/crease-killer-precision-lifter",
+              "locator": "Transcript: initial crease correction; flexible-tab reduction; closing incremental-pull advice",
+              "status": "Primary manufacturer transcript reread November 4, 2026. Its deliberate overpull demonstrations are excluded.",
+              "passage": "The tutorial aligns a crease tab with the low, demonstrates flexible tabs for initial reduction and narrow tabs for later detail, then checks the panel between incremental pulls. It warns that off-center placement and overpulling can damage metal. This supports a qualitative technique, not a validated plan for this vehicle."
+            }
+          ],
+          "repair_actions_validated": false,
+          "limits": "Qualitative prototype guidance. The area is approximate; depth, force, exact contact points and repair quality are not measured.",
+          "image_fingerprint": "edabe20a23f9635b5ccc4fa42363d0f01175d6d083e51db82b0dbb49dcdcedbe"
+        }
+      },
+      "after": {
+        "file": "white-door-after.webp",
+        "sha256": "a1326a3f0714e938174158574007b4cefb1f13e496f856697adf32b9e7c8efbf",
+        "recorded_at": "2026-11-05T15:47:41.695501+00:00",
+        "result": {
+          "mode": "zen",
+          "visible_evidence": "The panel is white with a door handle at the left, a vertical door seam near the left edge, a window line above, and dark lower trim. A broad soft reflection break/low sits on the door skin right of that seam, centered below the window line and above the lower trim.",
+          "dent_region": {
+            "x": 0.32,
+            "y": 0.4,
+            "width": 0.36,
+            "height": 0.36
+          },
+          "dent_shape": "broad_low",
+          "assumptions": [
+            "Visible: a broad soft reflection break/low on the door skin; exact depth and contact point are not measured.",
+            "Unverified: paint integrity, panel material, and whether this vehicle or procedure permits glue pulling.",
+            "Tab size, adhesive, force, and lamp position are not established by this photo."
+          ],
+          "confidence": "medium",
+          "where_to_work": "On the door skin just right of the vertical door seam, centered below the window line and above the dark lower trim; keep the tab and lamp clear of the seam.",
+          "reason": "The current distortion reads as a broad rounded low rather than a sharp crease, so one controlled glue pull is the conditional next candidate, with suitability still unverified.",
+          "comparison": {
+            "view_match": "different",
+            "change": "cannot_judge",
+            "evidence": "The camera is closer and lower with different reflections; the same handle and seam landmarks are visible, but the apparent shape change cannot be judged."
+          },
+          "selection": {
+            "visible_evidence": "The panel is white with a door handle at the left, a vertical door seam near the left edge, a window line above, and dark lower trim. A broad soft reflection break/low sits on the door skin right of that seam, centered below the window line and above the lower trim.",
+            "dent_region": {
+              "x": 0.32,
+              "y": 0.4,
+              "width": 0.36,
+              "height": 0.36
+            },
+            "dent_shape": "broad_low",
+            "assumptions": [
+              "Visible: a broad soft reflection break/low on the door skin; exact depth and contact point are not measured.",
+              "Unverified: paint integrity, panel material, and whether this vehicle or procedure permits glue pulling.",
+              "Tab size, adhesive, force, and lamp position are not established by this photo."
+            ],
+            "confidence": "medium",
+            "card_id": "controlled_pull",
+            "where_to_work": "On the door skin just right of the vertical door seam, centered below the window line and above the dark lower trim; keep the tab and lamp clear of the seam.",
+            "reason": "The current distortion reads as a broad rounded low rather than a sharp crease, so one controlled glue pull is the conditional next candidate, with suitability still unverified.",
+            "comparison": {
+              "view_match": "different",
+              "change": "cannot_judge",
+              "evidence": "The camera is closer and lower with different reflections; the same handle and seam landmarks are visible, but the apparent shape change cannot be judged."
+            }
+          },
+          "status": "proposal",
+          "next_action": {
+            "id": "controlled_pull",
+            "title": "Reduce the low with one controlled glue pull",
+            "kind": "repair",
+            "shapes": ["broad_low", "small_ding"],
+            "tools": "Glue-pull lifter, shape-matched tab, compatible adhesive and release agent, PDR light",
+            "approach": "Reduce the visible depression incrementally, then let the next image guide the following adjustment.",
+            "steps": [
+              "Locate the depression using the displayed panel landmarks. Match the glue tab to that low rather than covering the whole outlined region.",
+              "Prepare the panel and attach the tab according to the compatible glue system's instructions.",
+              "Make one small outward correction with the lifter, then release the adhesive as instructed instead of ripping the tab off.",
+              "Record the action and add the next photo. The copilot will compare the remaining distortion before recommending another adjustment."
+            ],
+            "expected_change": "The depression should look less pronounced, without a new raised spot. This is an expectation, not a measured result.",
+            "stop_when": "Stop pulling if the paint changes, a raised spot appears, or the low is no longer identifiable. Do not increase force to chase unchanged damage.",
+            "source_ids": ["keco-controlled-pulls", "carcosmetics-pdr", "rivian-pdr-2023"],
+            "scope": "Qualitative low-reduction proposal. Exact tab dimensions, force and contact coordinates are not determined by the photograph."
+          },
+          "physical_preconditions": [
+            "The applicable vehicle procedure and panel material must permit the method; the historical Rivian statement is not current authorization.",
+            "The coating must pass the required inspection, and the tool and adhesive setup must follow their product instructions."
+          ],
+          "sources": [
+            {
+              "id": "rivian-pdr-2023",
+              "title": "Rivian PDR statement",
+              "url": "https://oemonestop.com/sites/default/files/Rivian_POS_Paintless-Dent-Repair%282-2-23%29.pdf",
+              "locator": "RCI-52-22-002-2, page 1, February 2, 2023",
+              "status": "Historical OEM statement. Indexed text checked November 4, 2026. Current vehicle-specific applicability remains unresolved.",
+              "passage": "For 2022+ R1T and R1S vehicles, the statement requires 30X paint checks before and after repair, prohibits modifying panels for access, and favors non-damaging glue pulling. Material restrictions and the current vehicle procedure must be checked separately. A photograph cannot establish paint compliance."
+            },
+            {
+              "id": "keco-controlled-pulls",
+              "title": "KECO precision lifter demonstration",
+              "url": "https://www.kecotabs.com/blogs/all/crease-killer-precision-lifter",
+              "locator": "Transcript: initial crease correction; flexible-tab reduction; closing incremental-pull advice",
+              "status": "Primary manufacturer transcript reread November 4, 2026. Its deliberate overpull demonstrations are excluded.",
+              "passage": "The tutorial aligns a crease tab with the low, demonstrates flexible tabs for initial reduction and narrow tabs for later detail, then checks the panel between incremental pulls. It warns that off-center placement and overpulling can damage metal. This supports a qualitative technique, not a validated plan for this vehicle."
+            },
+            {
+              "id": "carcosmetics-pdr",
+              "title": "Car Cosmetics PDR technique FAQ",
+              "url": "https://www.carcosmetics.com/en/service/frequently-asked-questions-faq/",
+              "locator": "Reflection board/PDR lamp; cold glue procedure; PDR suitability",
+              "status": "Primary PDR supplier guidance read November 4, 2026. Cold-glue details do not apply to every adhesive system.",
+              "passage": "The FAQ describes controlled external pulling, checking under a PDR lamp after each pull, and correcting a confirmed high with a knockdown. Intact original paint and damage shape affect suitability. Lamp reflections help locate remaining lows and highs."
+            }
+          ],
+          "repair_actions_validated": false,
+          "limits": "Qualitative prototype guidance. The area is approximate; depth, force, exact contact points and repair quality are not measured.",
+          "image_fingerprint": "42f87c83c76315b9f5b5095f99651fb7dbb1e230a2f7bf24057a2b1d95d4c022"
+        }
+      }
+    },
+    "rivian-tailgate": {
+      "before": {
+        "file": "rivian-tailgate-before.webp",
+        "sha256": "eede9c8ed0c6ba72340915e5ab35d24d28e4809f4a7654480e542b1ee4dff0b3",
+        "recorded_at": "2026-11-05T15:48:00.458783+00:00",
+        "result": {
+          "mode": "zen",
+          "visible_evidence": "The dark green rear hatch shows a broad, wavy reflection break left of center above the full-width red tail lamp, with a soft creased low rather than a small round ding.",
+          "dent_region": {
+            "x": 0.1,
+            "y": 0.18,
+            "width": 0.45,
+            "height": 0.47
+          },
+          "dent_shape": "crease",
+          "assumptions": [
+            "Visible: the reflection distortion localizes a broad low, but its depth and exact crease line are not measurable.",
+            "Paint integrity, material and prior repair history are unverified.",
+            "Vehicle-specific PDR procedure and suitable flexible-tab setup are not established by the photo."
+          ],
+          "confidence": "medium",
+          "where_to_work": "On the rear hatch's dark green panel, left of center and above the red tail-lamp seam; keep the tool clear of the lamp, hatch edge and any seam.",
+          "reason": "The broad reflection break suggests a creased low, so an incremental shape-matched flexible-crease glue pull is the closest conditional next step; exact force and contact area remain undetermined.",
+          "comparison": null,
+          "selection": {
+            "visible_evidence": "The dark green rear hatch shows a broad, wavy reflection break left of center above the full-width red tail lamp, with a soft creased low rather than a small round ding.",
+            "dent_region": {
+              "x": 0.1,
+              "y": 0.18,
+              "width": 0.45,
+              "height": 0.47
+            },
+            "dent_shape": "crease",
+            "assumptions": [
+              "Visible: the reflection distortion localizes a broad low, but its depth and exact crease line are not measurable.",
+              "Paint integrity, material and prior repair history are unverified.",
+              "Vehicle-specific PDR procedure and suitable flexible-tab setup are not established by the photo."
+            ],
+            "confidence": "medium",
+            "card_id": "crease_pull",
+            "where_to_work": "On the rear hatch's dark green panel, left of center and above the red tail-lamp seam; keep the tool clear of the lamp, hatch edge and any seam.",
+            "reason": "The broad reflection break suggests a creased low, so an incremental shape-matched flexible-crease glue pull is the closest conditional next step; exact force and contact area remain undetermined.",
+            "comparison": null
+          },
+          "status": "proposal",
+          "next_action": {
+            "id": "crease_pull",
+            "title": "Reduce the crease with an incremental glue pull",
+            "kind": "repair",
+            "shapes": ["crease"],
+            "tools": "Controlled glue-pull lifter, compatible flexible crease tab, adhesive and release agent, PDR light",
+            "approach": "Start reducing the creased low with a shape-matched flexible tab. Reassess before progressing to narrower detail work.",
+            "steps": [
+              "Find the creased low at the displayed landmarks. Align a compatible flexible crease tab along it; the outline locates damage and is not a tab-placement guide.",
+              "Follow the glue system's preparation and attachment instructions, then set the lifter using its product instructions.",
+              "Apply one small controlled lift. Release the adhesive as instructed and stop before the low becomes a raised ridge.",
+              "Add the next photo and any action note. The copilot will assess the crease and surrounding depression before choosing the next adjustment."
+            ],
+            "expected_change": "The crease and surrounding depression should soften. Remaining distortion may need further work; a complete repair is not expected from one lift.",
+            "stop_when": "Stop if paint changes, a ridge rises, the tab cannot be aligned on the low, or the lifter cannot be supported as specified. Do not bridge a panel seam.",
+            "source_ids": ["keco-controlled-pulls", "rivian-pdr-2023"],
+            "scope": "Prototype adaptation of a manufacturer technique for visible creased lows. This vehicle's suitability and exact tool setup are not established by the image."
+          },
+          "physical_preconditions": [
+            "The applicable vehicle procedure and panel material must permit the method; the historical Rivian statement is not current authorization.",
+            "The coating must pass the required inspection, and the tool and adhesive setup must follow their product instructions."
+          ],
+          "sources": [
+            {
+              "id": "rivian-pdr-2023",
+              "title": "Rivian PDR statement",
+              "url": "https://oemonestop.com/sites/default/files/Rivian_POS_Paintless-Dent-Repair%282-2-23%29.pdf",
+              "locator": "RCI-52-22-002-2, page 1, February 2, 2023",
+              "status": "Historical OEM statement. Indexed text checked November 4, 2026. Current vehicle-specific applicability remains unresolved.",
+              "passage": "For 2022+ R1T and R1S vehicles, the statement requires 30X paint checks before and after repair, prohibits modifying panels for access, and favors non-damaging glue pulling. Material restrictions and the current vehicle procedure must be checked separately. A photograph cannot establish paint compliance."
+            },
+            {
+              "id": "keco-controlled-pulls",
+              "title": "KECO precision lifter demonstration",
+              "url": "https://www.kecotabs.com/blogs/all/crease-killer-precision-lifter",
+              "locator": "Transcript: initial crease correction; flexible-tab reduction; closing incremental-pull advice",
+              "status": "Primary manufacturer transcript reread November 4, 2026. Its deliberate overpull demonstrations are excluded.",
+              "passage": "The tutorial aligns a crease tab with the low, demonstrates flexible tabs for initial reduction and narrow tabs for later detail, then checks the panel between incremental pulls. It warns that off-center placement and overpulling can damage metal. This supports a qualitative technique, not a validated plan for this vehicle."
+            }
+          ],
+          "repair_actions_validated": false,
+          "limits": "Qualitative prototype guidance. The area is approximate; depth, force, exact contact points and repair quality are not measured.",
+          "image_fingerprint": "455a473a7b9d4ea687b869cdd5548c37cf6ebabf956b10c533b33177aac386a0"
+        }
+      },
+      "after": {
+        "file": "rivian-tailgate-after.webp",
+        "sha256": "bcb850828f3a65143f6739e7ad321fb469c893baec9ca32cf45ee6cb614f2866",
+        "recorded_at": "2026-11-05T15:48:27.550850+00:00",
+        "result": {
+          "mode": "zen",
+          "visible_evidence": "The current wide rear view shows a dark green tailgate with a full-width red light bar and RIVIAN lettering; no clear localized dent is visible above the left side of the light bar. The panel looks broadly smooth here, though the distant, angled view limits assessment.",
+          "dent_region": null,
+          "dent_shape": "nearly_flat",
+          "assumptions": [
+            "Visible: dark green rear hatch with a red light bar; no distinct low is localizable in this wide image.",
+            "Unverified: paint integrity, panel material, and vehicle-specific procedure suitability remain unknown.",
+            "The earlier close-up and current wide view differ enough that apparent smoothness is not proof of a completed repair."
+          ],
+          "confidence": "low",
+          "where_to_work": "Inspect the rear hatch above the left half of the red light bar, near the RIVIAN lettering, keeping the light path clear of the lamp and panel seams.",
+          "reason": "The current panel appears nearly flat from this wider view, so switch from pulling to finish inspection rather than repeating the prior crease pull; this photo cannot establish that the panel is flat.",
+          "comparison": {
+            "view_match": "different",
+            "change": "cannot_judge",
+            "evidence": "The previous image was a close-up of the left hatch above the light bar, while the current image is a distant, angled rear view with different lighting; shape change cannot be judged."
+          },
+          "selection": {
+            "visible_evidence": "The current wide rear view shows a dark green tailgate with a full-width red light bar and RIVIAN lettering; no clear localized dent is visible above the left side of the light bar. The panel looks broadly smooth here, though the distant, angled view limits assessment.",
+            "dent_region": null,
+            "dent_shape": "nearly_flat",
+            "assumptions": [
+              "Visible: dark green rear hatch with a red light bar; no distinct low is localizable in this wide image.",
+              "Unverified: paint integrity, panel material, and vehicle-specific procedure suitability remain unknown.",
+              "The earlier close-up and current wide view differ enough that apparent smoothness is not proof of a completed repair."
+            ],
+            "confidence": "low",
+            "card_id": "finish_check",
+            "where_to_work": "Inspect the rear hatch above the left half of the red light bar, near the RIVIAN lettering, keeping the light path clear of the lamp and panel seams.",
+            "reason": "The current panel appears nearly flat from this wider view, so switch from pulling to finish inspection rather than repeating the prior crease pull; this photo cannot establish that the panel is flat.",
+            "comparison": {
+              "view_match": "different",
+              "change": "cannot_judge",
+              "evidence": "The previous image was a close-up of the left hatch above the light bar, while the current image is a distant, angled rear view with different lighting; shape change cannot be judged."
+            }
+          },
+          "status": "ready",
+          "next_action": {
+            "id": "finish_check",
+            "title": "End pulling and check the finish",
+            "kind": "inspection",
+            "shapes": ["nearly_flat"],
+            "tools": "PDR light and the applicable paint-inspection equipment",
+            "approach": "When the main dent is no longer apparent, switch from reshaping to finish evaluation.",
+            "steps": [
+              "Remove the pulling tool. Do not repeat the earlier pull on a panel that now appears smooth.",
+              "Sweep the PDR light over the former dent and its edges to inspect for localized reflection breaks.",
+              "Complete the applicable post-repair paint inspection. The current image supports a visual assessment, not certification of a finished repair."
+            ],
+            "expected_change": "No metal change is intended. The aim is to find any remaining distortion or coating concern before further correction.",
+            "stop_when": "Keep correction tools off the panel unless a remaining defect is identified. A smoother photograph alone does not establish a completed repair.",
+            "source_ids": ["carcosmetics-pdr", "rivian-pdr-2023"],
+            "scope": "Use when the current image appears nearly flat, even when prior repair actions are unknown."
+          },
+          "physical_preconditions": [],
+          "sources": [
+            {
+              "id": "rivian-pdr-2023",
+              "title": "Rivian PDR statement",
+              "url": "https://oemonestop.com/sites/default/files/Rivian_POS_Paintless-Dent-Repair%282-2-23%29.pdf",
+              "locator": "RCI-52-22-002-2, page 1, February 2, 2023",
+              "status": "Historical OEM statement. Indexed text checked November 4, 2026. Current vehicle-specific applicability remains unresolved.",
+              "passage": "For 2022+ R1T and R1S vehicles, the statement requires 30X paint checks before and after repair, prohibits modifying panels for access, and favors non-damaging glue pulling. Material restrictions and the current vehicle procedure must be checked separately. A photograph cannot establish paint compliance."
+            },
+            {
+              "id": "carcosmetics-pdr",
+              "title": "Car Cosmetics PDR technique FAQ",
+              "url": "https://www.carcosmetics.com/en/service/frequently-asked-questions-faq/",
+              "locator": "Reflection board/PDR lamp; cold glue procedure; PDR suitability",
+              "status": "Primary PDR supplier guidance read November 4, 2026. Cold-glue details do not apply to every adhesive system.",
+              "passage": "The FAQ describes controlled external pulling, checking under a PDR lamp after each pull, and correcting a confirmed high with a knockdown. Intact original paint and damage shape affect suitability. Lamp reflections help locate remaining lows and highs."
+            }
+          ],
+          "repair_actions_validated": false,
+          "limits": "Qualitative prototype guidance. The area is approximate; depth, force, exact contact points and repair quality are not measured.",
+          "image_fingerprint": "d7cf41534df0a50dcbf18c45d6f135b10571967afa2d793f7dfd54e2e6000c40"
+        }
+      }
+    },
+    "blue-quarter": {
+      "before": {
+        "file": "blue-quarter-before.webp",
+        "sha256": "2d6dbcab00765014c2541e92a05387202d3a1d9b3b8de44198e29c02e25d89ec",
+        "recorded_at": "2026-11-05T15:48:50.486789+00:00",
+        "result": {
+          "mode": "zen",
+          "visible_evidence": "Blue rear quarter panel under the red taillight and beside the hatch opening shows a broad concave low. White scuffing and possible coating damage are visible along its lower edge.",
+          "dent_region": {
+            "x": 0.24,
+            "y": 0.3,
+            "width": 0.52,
+            "height": 0.5
+          },
+          "dent_shape": "broad_low",
+          "assumptions": [
+            "Visible: broad low with lower white scuffing; exact depth and whether the scuffing breaches coating are unverified.",
+            "Paint type, panel material and vehicle-specific repair procedure are unverified.",
+            "No action note is provided, so prior actions and outcome are unknown."
+          ],
+          "confidence": "medium",
+          "where_to_work": "Rear quarter panel below the taillight, alongside the hatch opening; inspect the scuffed lower edge and pause reshaping there.",
+          "reason": "Visible white scuffing/abrasion on the blue panel is a coating concern, so the stop_paint card pauses correction pending paint inspection.",
+          "comparison": null,
+          "selection": {
+            "visible_evidence": "Blue rear quarter panel under the red taillight and beside the hatch opening shows a broad concave low. White scuffing and possible coating damage are visible along its lower edge.",
+            "dent_region": {
+              "x": 0.24,
+              "y": 0.3,
+              "width": 0.52,
+              "height": 0.5
+            },
+            "dent_shape": "broad_low",
+            "assumptions": [
+              "Visible: broad low with lower white scuffing; exact depth and whether the scuffing breaches coating are unverified.",
+              "Paint type, panel material and vehicle-specific repair procedure are unverified.",
+              "No action note is provided, so prior actions and outcome are unknown."
+            ],
+            "confidence": "medium",
+            "card_id": "stop_paint",
+            "where_to_work": "Rear quarter panel below the taillight, alongside the hatch opening; inspect the scuffed lower edge and pause reshaping there.",
+            "reason": "Visible white scuffing/abrasion on the blue panel is a coating concern, so the stop_paint card pauses correction pending paint inspection.",
+            "comparison": null
+          },
+          "status": "stop",
+          "next_action": {
+            "id": "stop_paint",
+            "title": "Stop corrections and inspect the paint damage",
+            "kind": "stop",
+            "tools": "Applicable paint-inspection equipment",
+            "approach": "Preserve the coating and suspend reshaping when a paint concern is present.",
+            "steps": [
+              "Do not apply another pull or knockdown to this area.",
+              "Record the location and inspect the coating according to the vehicle procedure.",
+              "Record the finding before resuming any repair."
+            ],
+            "expected_change": "No correction is intended while the coating concern remains unresolved.",
+            "stop_when": "Keep physical work paused while the paint concern remains unresolved.",
+            "source_ids": ["rivian-pdr-2023", "carcosmetics-pdr"],
+            "scope": "Required for a reported paint issue or visible coating damage."
+          },
+          "physical_preconditions": [],
+          "sources": [
+            {
+              "id": "rivian-pdr-2023",
+              "title": "Rivian PDR statement",
+              "url": "https://oemonestop.com/sites/default/files/Rivian_POS_Paintless-Dent-Repair%282-2-23%29.pdf",
+              "locator": "RCI-52-22-002-2, page 1, February 2, 2023",
+              "status": "Historical OEM statement. Indexed text checked November 4, 2026. Current vehicle-specific applicability remains unresolved.",
+              "passage": "For 2022+ R1T and R1S vehicles, the statement requires 30X paint checks before and after repair, prohibits modifying panels for access, and favors non-damaging glue pulling. Material restrictions and the current vehicle procedure must be checked separately. A photograph cannot establish paint compliance."
+            },
+            {
+              "id": "carcosmetics-pdr",
+              "title": "Car Cosmetics PDR technique FAQ",
+              "url": "https://www.carcosmetics.com/en/service/frequently-asked-questions-faq/",
+              "locator": "Reflection board/PDR lamp; cold glue procedure; PDR suitability",
+              "status": "Primary PDR supplier guidance read November 4, 2026. Cold-glue details do not apply to every adhesive system.",
+              "passage": "The FAQ describes controlled external pulling, checking under a PDR lamp after each pull, and correcting a confirmed high with a knockdown. Intact original paint and damage shape affect suitability. Lamp reflections help locate remaining lows and highs."
+            }
+          ],
+          "repair_actions_validated": false,
+          "limits": "Qualitative prototype guidance. The area is approximate; depth, force, exact contact points and repair quality are not measured.",
+          "image_fingerprint": "40b8e32c6164176efe1e35bbcceeb76cfcac90c3c2e76327c6ca9ca7d48c966b"
+        }
+      },
+      "after": {
+        "file": "blue-quarter-after.webp",
+        "sha256": "214fdc121eb4dc8b7c3636024cbddeabc46bb9b21b2cff493dd24eeba2212821",
+        "recorded_at": "2026-11-05T15:49:32.188339+00:00",
+        "result": {
+          "mode": "zen",
+          "visible_evidence": "The current close-up shows a blue rear quarter panel with a broad reflection-distorted low centrally, beside the hatch opening and above the exposed inner tub. A rough, discolored coating edge is visible along the panel's lower boundary.",
+          "dent_region": {
+            "x": 0.33,
+            "y": 0.16,
+            "width": 0.45,
+            "height": 0.43
+          },
+          "dent_shape": "broad_low",
+          "assumptions": [
+            "Visible: central broad low and a rough/discolored lower edge; exact depth and whether the coating is breached are unverified.",
+            "Paint type, panel material and vehicle-specific repair procedure are unverified.",
+            "No action note means the prior action and outcome are unknown, and the changed view limits comparison."
+          ],
+          "confidence": "medium",
+          "where_to_work": "Blue rear quarter panel: central broad low and especially the rough lower edge beside the inner tub/hatch opening; inspect coating and keep correction tools off this area.",
+          "reason": "Visible rough/discolored coating along the lower panel edge is an unresolved paint concern, so reshaping should stay paused for coating inspection.",
+          "comparison": {
+            "view_match": "uncertain",
+            "change": "cannot_judge",
+            "evidence": "Closer, lower-angle framing omits the taillight and alters reflections; the remaining broad low and lower-edge coating state cannot be reliably compared."
+          },
+          "selection": {
+            "visible_evidence": "The current close-up shows a blue rear quarter panel with a broad reflection-distorted low centrally, beside the hatch opening and above the exposed inner tub. A rough, discolored coating edge is visible along the panel's lower boundary.",
+            "dent_region": {
+              "x": 0.33,
+              "y": 0.16,
+              "width": 0.45,
+              "height": 0.43
+            },
+            "dent_shape": "broad_low",
+            "assumptions": [
+              "Visible: central broad low and a rough/discolored lower edge; exact depth and whether the coating is breached are unverified.",
+              "Paint type, panel material and vehicle-specific repair procedure are unverified.",
+              "No action note means the prior action and outcome are unknown, and the changed view limits comparison."
+            ],
+            "confidence": "medium",
+            "card_id": "stop_paint",
+            "where_to_work": "Blue rear quarter panel: central broad low and especially the rough lower edge beside the inner tub/hatch opening; inspect coating and keep correction tools off this area.",
+            "reason": "Visible rough/discolored coating along the lower panel edge is an unresolved paint concern, so reshaping should stay paused for coating inspection.",
+            "comparison": {
+              "view_match": "uncertain",
+              "change": "cannot_judge",
+              "evidence": "Closer, lower-angle framing omits the taillight and alters reflections; the remaining broad low and lower-edge coating state cannot be reliably compared."
+            }
+          },
+          "status": "stop",
+          "next_action": {
+            "id": "stop_paint",
+            "title": "Stop corrections and inspect the paint damage",
+            "kind": "stop",
+            "tools": "Applicable paint-inspection equipment",
+            "approach": "Preserve the coating and suspend reshaping when a paint concern is present.",
+            "steps": [
+              "Do not apply another pull or knockdown to this area.",
+              "Record the location and inspect the coating according to the vehicle procedure.",
+              "Record the finding before resuming any repair."
+            ],
+            "expected_change": "No correction is intended while the coating concern remains unresolved.",
+            "stop_when": "Keep physical work paused while the paint concern remains unresolved.",
+            "source_ids": ["rivian-pdr-2023", "carcosmetics-pdr"],
+            "scope": "Required for a reported paint issue or visible coating damage."
+          },
+          "physical_preconditions": [],
+          "sources": [
+            {
+              "id": "rivian-pdr-2023",
+              "title": "Rivian PDR statement",
+              "url": "https://oemonestop.com/sites/default/files/Rivian_POS_Paintless-Dent-Repair%282-2-23%29.pdf",
+              "locator": "RCI-52-22-002-2, page 1, February 2, 2023",
+              "status": "Historical OEM statement. Indexed text checked November 4, 2026. Current vehicle-specific applicability remains unresolved.",
+              "passage": "For 2022+ R1T and R1S vehicles, the statement requires 30X paint checks before and after repair, prohibits modifying panels for access, and favors non-damaging glue pulling. Material restrictions and the current vehicle procedure must be checked separately. A photograph cannot establish paint compliance."
+            },
+            {
+              "id": "carcosmetics-pdr",
+              "title": "Car Cosmetics PDR technique FAQ",
+              "url": "https://www.carcosmetics.com/en/service/frequently-asked-questions-faq/",
+              "locator": "Reflection board/PDR lamp; cold glue procedure; PDR suitability",
+              "status": "Primary PDR supplier guidance read November 4, 2026. Cold-glue details do not apply to every adhesive system.",
+              "passage": "The FAQ describes controlled external pulling, checking under a PDR lamp after each pull, and correcting a confirmed high with a knockdown. Intact original paint and damage shape affect suitability. Lamp reflections help locate remaining lows and highs."
+            }
+          ],
+          "repair_actions_validated": false,
+          "limits": "Qualitative prototype guidance. The area is approximate; depth, force, exact contact points and repair quality are not measured.",
+          "image_fingerprint": "da44cef3dfb3dfeb7b80384898c277ad99a09e43df4fa7b639177774d974c497"
+        }
+      }
+    },
+    "denttime-silver-door": {
+      "before": {
+        "file": "denttime-silver-door-before.webp",
+        "sha256": "f33431f1bd983e3af85479d30a636afa6d9dde3f86be0efd46bb7667b17e3dd3",
+        "recorded_at": "2026-11-05T15:49:52.784552+00:00",
+        "result": {
+          "mode": "zen",
+          "visible_evidence": "Light silver-gray panel with a horizontal character line across the middle, black window trim above, and a door handle at lower left. A broad, rounded low distorts reflections near the center just above the line, with shadowing continuing across and below it.",
+          "dent_region": {
+            "x": 0.36,
+            "y": 0.14,
+            "width": 0.34,
+            "height": 0.45
+          },
+          "dent_shape": "broad_low",
+          "assumptions": [
+            "The rounded low is visible, but its depth, exact boundary, and force requirements are unverified from a normal photo.",
+            "Paint integrity, coating condition, and panel material remain unverified; no paint inspection is documented.",
+            "Vehicle-specific PDR procedure and adhesive/tool compatibility remain unverified."
+          ],
+          "confidence": "medium",
+          "where_to_work": "At the center of the silver panel just above the horizontal character line and inboard of the lower-left door handle; keep the tab clear of the top window seam and off the handle.",
+          "reason": "The visible depression is broad and rounded rather than a distinct sharp crease, so one controlled glue pull is the best qualitative next step before reassessment.",
+          "comparison": null,
+          "selection": {
+            "visible_evidence": "Light silver-gray panel with a horizontal character line across the middle, black window trim above, and a door handle at lower left. A broad, rounded low distorts reflections near the center just above the line, with shadowing continuing across and below it.",
+            "dent_region": {
+              "x": 0.36,
+              "y": 0.14,
+              "width": 0.34,
+              "height": 0.45
+            },
+            "dent_shape": "broad_low",
+            "assumptions": [
+              "The rounded low is visible, but its depth, exact boundary, and force requirements are unverified from a normal photo.",
+              "Paint integrity, coating condition, and panel material remain unverified; no paint inspection is documented.",
+              "Vehicle-specific PDR procedure and adhesive/tool compatibility remain unverified."
+            ],
+            "confidence": "medium",
+            "card_id": "controlled_pull",
+            "where_to_work": "At the center of the silver panel just above the horizontal character line and inboard of the lower-left door handle; keep the tab clear of the top window seam and off the handle.",
+            "reason": "The visible depression is broad and rounded rather than a distinct sharp crease, so one controlled glue pull is the best qualitative next step before reassessment.",
+            "comparison": null
+          },
+          "status": "proposal",
+          "next_action": {
+            "id": "controlled_pull",
+            "title": "Reduce the low with one controlled glue pull",
+            "kind": "repair",
+            "shapes": ["broad_low", "small_ding"],
+            "tools": "Glue-pull lifter, shape-matched tab, compatible adhesive and release agent, PDR light",
+            "approach": "Reduce the visible depression incrementally, then let the next image guide the following adjustment.",
+            "steps": [
+              "Locate the depression using the displayed panel landmarks. Match the glue tab to that low rather than covering the whole outlined region.",
+              "Prepare the panel and attach the tab according to the compatible glue system's instructions.",
+              "Make one small outward correction with the lifter, then release the adhesive as instructed instead of ripping the tab off.",
+              "Record the action and add the next photo. The copilot will compare the remaining distortion before recommending another adjustment."
+            ],
+            "expected_change": "The depression should look less pronounced, without a new raised spot. This is an expectation, not a measured result.",
+            "stop_when": "Stop pulling if the paint changes, a raised spot appears, or the low is no longer identifiable. Do not increase force to chase unchanged damage.",
+            "source_ids": ["keco-controlled-pulls", "carcosmetics-pdr", "rivian-pdr-2023"],
+            "scope": "Qualitative low-reduction proposal. Exact tab dimensions, force and contact coordinates are not determined by the photograph."
+          },
+          "physical_preconditions": [
+            "The applicable vehicle procedure and panel material must permit the method; the historical Rivian statement is not current authorization.",
+            "The coating must pass the required inspection, and the tool and adhesive setup must follow their product instructions."
+          ],
+          "sources": [
+            {
+              "id": "rivian-pdr-2023",
+              "title": "Rivian PDR statement",
+              "url": "https://oemonestop.com/sites/default/files/Rivian_POS_Paintless-Dent-Repair%282-2-23%29.pdf",
+              "locator": "RCI-52-22-002-2, page 1, February 2, 2023",
+              "status": "Historical OEM statement. Indexed text checked November 4, 2026. Current vehicle-specific applicability remains unresolved.",
+              "passage": "For 2022+ R1T and R1S vehicles, the statement requires 30X paint checks before and after repair, prohibits modifying panels for access, and favors non-damaging glue pulling. Material restrictions and the current vehicle procedure must be checked separately. A photograph cannot establish paint compliance."
+            },
+            {
+              "id": "keco-controlled-pulls",
+              "title": "KECO precision lifter demonstration",
+              "url": "https://www.kecotabs.com/blogs/all/crease-killer-precision-lifter",
+              "locator": "Transcript: initial crease correction; flexible-tab reduction; closing incremental-pull advice",
+              "status": "Primary manufacturer transcript reread November 4, 2026. Its deliberate overpull demonstrations are excluded.",
+              "passage": "The tutorial aligns a crease tab with the low, demonstrates flexible tabs for initial reduction and narrow tabs for later detail, then checks the panel between incremental pulls. It warns that off-center placement and overpulling can damage metal. This supports a qualitative technique, not a validated plan for this vehicle."
+            },
+            {
+              "id": "carcosmetics-pdr",
+              "title": "Car Cosmetics PDR technique FAQ",
+              "url": "https://www.carcosmetics.com/en/service/frequently-asked-questions-faq/",
+              "locator": "Reflection board/PDR lamp; cold glue procedure; PDR suitability",
+              "status": "Primary PDR supplier guidance read November 4, 2026. Cold-glue details do not apply to every adhesive system.",
+              "passage": "The FAQ describes controlled external pulling, checking under a PDR lamp after each pull, and correcting a confirmed high with a knockdown. Intact original paint and damage shape affect suitability. Lamp reflections help locate remaining lows and highs."
+            }
+          ],
+          "repair_actions_validated": false,
+          "limits": "Qualitative prototype guidance. The area is approximate; depth, force, exact contact points and repair quality are not measured.",
+          "image_fingerprint": "5a5db5bc8328240219003adf913f6c718d8474b5c2ebe06c6672dc267cc3a6b7"
+        }
+      },
+      "after": {
+        "file": "denttime-silver-door-after.webp",
+        "sha256": "42384ca226eaeed826b70ac9a91a25d50da7f7c8916909111a6318e7934e7d21",
+        "recorded_at": "2026-11-05T15:50:03.457065+00:00",
+        "result": {
+          "mode": "zen",
+          "visible_evidence": "Light silver-gray door panel with dark window trim at top, a horizontal character line across the upper-middle, and a door handle at lower left. The surface looks nearly flat in this view, with no distinct low or crease localized.",
+          "dent_region": null,
+          "dent_shape": "nearly_flat",
+          "assumptions": [
+            "The panel appears nearly flat, but exact remaining distortion is unverified from a normal photo without PDR-light reflection.",
+            "Paint integrity and coating condition are not established; no paint inspection is documented.",
+            "Panel material and vehicle-specific PDR/glue suitability remain unverified."
+          ],
+          "confidence": "medium",
+          "where_to_work": "Across the silver door panel between the horizontal character line and the lower-left handle; inspect the former low area near the center above the line with a PDR light, keeping tools clear of the top window seam and handle.",
+          "reason": "The current view shows no distinct low or crease, so finish inspection is more appropriate than repeating a pull.",
+          "comparison": {
+            "view_match": "similar",
+            "change": "looks_flatter",
+            "evidence": "The broad reflection distortion seen near the character line in the previous photo is not apparent in the current view, though lighting and framing differ, so this is only a tentative visual change."
+          },
+          "selection": {
+            "visible_evidence": "Light silver-gray door panel with dark window trim at top, a horizontal character line across the upper-middle, and a door handle at lower left. The surface looks nearly flat in this view, with no distinct low or crease localized.",
+            "dent_region": null,
+            "dent_shape": "nearly_flat",
+            "assumptions": [
+              "The panel appears nearly flat, but exact remaining distortion is unverified from a normal photo without PDR-light reflection.",
+              "Paint integrity and coating condition are not established; no paint inspection is documented.",
+              "Panel material and vehicle-specific PDR/glue suitability remain unverified."
+            ],
+            "confidence": "medium",
+            "card_id": "finish_check",
+            "where_to_work": "Across the silver door panel between the horizontal character line and the lower-left handle; inspect the former low area near the center above the line with a PDR light, keeping tools clear of the top window seam and handle.",
+            "reason": "The current view shows no distinct low or crease, so finish inspection is more appropriate than repeating a pull.",
+            "comparison": {
+              "view_match": "similar",
+              "change": "looks_flatter",
+              "evidence": "The broad reflection distortion seen near the character line in the previous photo is not apparent in the current view, though lighting and framing differ, so this is only a tentative visual change."
+            }
+          },
+          "status": "ready",
+          "next_action": {
+            "id": "finish_check",
+            "title": "End pulling and check the finish",
+            "kind": "inspection",
+            "shapes": ["nearly_flat"],
+            "tools": "PDR light and the applicable paint-inspection equipment",
+            "approach": "When the main dent is no longer apparent, switch from reshaping to finish evaluation.",
+            "steps": [
+              "Remove the pulling tool. Do not repeat the earlier pull on a panel that now appears smooth.",
+              "Sweep the PDR light over the former dent and its edges to inspect for localized reflection breaks.",
+              "Complete the applicable post-repair paint inspection. The current image supports a visual assessment, not certification of a finished repair."
+            ],
+            "expected_change": "No metal change is intended. The aim is to find any remaining distortion or coating concern before further correction.",
+            "stop_when": "Keep correction tools off the panel unless a remaining defect is identified. A smoother photograph alone does not establish a completed repair.",
+            "source_ids": ["carcosmetics-pdr", "rivian-pdr-2023"],
+            "scope": "Use when the current image appears nearly flat, even when prior repair actions are unknown."
+          },
+          "physical_preconditions": [],
+          "sources": [
+            {
+              "id": "rivian-pdr-2023",
+              "title": "Rivian PDR statement",
+              "url": "https://oemonestop.com/sites/default/files/Rivian_POS_Paintless-Dent-Repair%282-2-23%29.pdf",
+              "locator": "RCI-52-22-002-2, page 1, February 2, 2023",
+              "status": "Historical OEM statement. Indexed text checked November 4, 2026. Current vehicle-specific applicability remains unresolved.",
+              "passage": "For 2022+ R1T and R1S vehicles, the statement requires 30X paint checks before and after repair, prohibits modifying panels for access, and favors non-damaging glue pulling. Material restrictions and the current vehicle procedure must be checked separately. A photograph cannot establish paint compliance."
+            },
+            {
+              "id": "carcosmetics-pdr",
+              "title": "Car Cosmetics PDR technique FAQ",
+              "url": "https://www.carcosmetics.com/en/service/frequently-asked-questions-faq/",
+              "locator": "Reflection board/PDR lamp; cold glue procedure; PDR suitability",
+              "status": "Primary PDR supplier guidance read November 4, 2026. Cold-glue details do not apply to every adhesive system.",
+              "passage": "The FAQ describes controlled external pulling, checking under a PDR lamp after each pull, and correcting a confirmed high with a knockdown. Intact original paint and damage shape affect suitability. Lamp reflections help locate remaining lows and highs."
+            }
+          ],
+          "repair_actions_validated": false,
+          "limits": "Qualitative prototype guidance. The area is approximate; depth, force, exact contact points and repair quality are not measured.",
+          "image_fingerprint": "b477f1d779bde2843aebf9f55447b1d8442cdf6cef86edb501bfba8d7530894e"
+        }
+      }
+    },
+    "ncpdr-small-ding": {
+      "before": {
+        "file": "ncpdr-small-ding-before.webp",
+        "sha256": "f4565eed9611148e7b2a9f85f56d388da8e897927cfc3540804cf966ee8f8e03",
+        "recorded_at": "2026-11-05T15:50:16.244679+00:00",
+        "result": {
+          "mode": "zen",
+          "visible_evidence": "Bronze/gold-finished panel with a diagonal panel seam running from mid-left toward bottom center. Inside the white circle, just right of the seam, there is a subtle elongated creased low under oblique lighting.",
+          "dent_region": {
+            "x": 0.235,
+            "y": 0.455,
+            "width": 0.175,
+            "height": 0.235
+          },
+          "dent_shape": "crease",
+          "assumptions": [
+            "Visible feature is a subtle creased low beside a diagonal seam; the white circle is only an annotation.",
+            "Paint integrity, coating condition, panel material and thickness are not verified by this normal photo.",
+            "Vehicle/procedure suitability, glue-system compatibility, exact tab size, contact point and force remain unverified."
+          ],
+          "confidence": "low",
+          "where_to_work": "On the gold panel just right of the diagonal seam, inside the white circle; center a compatible flexible crease tab on the low and keep the setup clear of the seam.",
+          "reason": "A visible creased low supports a conditional incremental crease-pull candidate, using the seam and circle only for location rather than exact tool placement.",
+          "comparison": null,
+          "selection": {
+            "visible_evidence": "Bronze/gold-finished panel with a diagonal panel seam running from mid-left toward bottom center. Inside the white circle, just right of the seam, there is a subtle elongated creased low under oblique lighting.",
+            "dent_region": {
+              "x": 0.235,
+              "y": 0.455,
+              "width": 0.175,
+              "height": 0.235
+            },
+            "dent_shape": "crease",
+            "assumptions": [
+              "Visible feature is a subtle creased low beside a diagonal seam; the white circle is only an annotation.",
+              "Paint integrity, coating condition, panel material and thickness are not verified by this normal photo.",
+              "Vehicle/procedure suitability, glue-system compatibility, exact tab size, contact point and force remain unverified."
+            ],
+            "confidence": "low",
+            "card_id": "crease_pull",
+            "where_to_work": "On the gold panel just right of the diagonal seam, inside the white circle; center a compatible flexible crease tab on the low and keep the setup clear of the seam.",
+            "reason": "A visible creased low supports a conditional incremental crease-pull candidate, using the seam and circle only for location rather than exact tool placement.",
+            "comparison": null
+          },
+          "status": "proposal",
+          "next_action": {
+            "id": "crease_pull",
+            "title": "Reduce the crease with an incremental glue pull",
+            "kind": "repair",
+            "shapes": ["crease"],
+            "tools": "Controlled glue-pull lifter, compatible flexible crease tab, adhesive and release agent, PDR light",
+            "approach": "Start reducing the creased low with a shape-matched flexible tab. Reassess before progressing to narrower detail work.",
+            "steps": [
+              "Find the creased low at the displayed landmarks. Align a compatible flexible crease tab along it; the outline locates damage and is not a tab-placement guide.",
+              "Follow the glue system's preparation and attachment instructions, then set the lifter using its product instructions.",
+              "Apply one small controlled lift. Release the adhesive as instructed and stop before the low becomes a raised ridge.",
+              "Add the next photo and any action note. The copilot will assess the crease and surrounding depression before choosing the next adjustment."
+            ],
+            "expected_change": "The crease and surrounding depression should soften. Remaining distortion may need further work; a complete repair is not expected from one lift.",
+            "stop_when": "Stop if paint changes, a ridge rises, the tab cannot be aligned on the low, or the lifter cannot be supported as specified. Do not bridge a panel seam.",
+            "source_ids": ["keco-controlled-pulls", "rivian-pdr-2023"],
+            "scope": "Prototype adaptation of a manufacturer technique for visible creased lows. This vehicle's suitability and exact tool setup are not established by the image."
+          },
+          "physical_preconditions": [
+            "The applicable vehicle procedure and panel material must permit the method; the historical Rivian statement is not current authorization.",
+            "The coating must pass the required inspection, and the tool and adhesive setup must follow their product instructions."
+          ],
+          "sources": [
+            {
+              "id": "rivian-pdr-2023",
+              "title": "Rivian PDR statement",
+              "url": "https://oemonestop.com/sites/default/files/Rivian_POS_Paintless-Dent-Repair%282-2-23%29.pdf",
+              "locator": "RCI-52-22-002-2, page 1, February 2, 2023",
+              "status": "Historical OEM statement. Indexed text checked November 4, 2026. Current vehicle-specific applicability remains unresolved.",
+              "passage": "For 2022+ R1T and R1S vehicles, the statement requires 30X paint checks before and after repair, prohibits modifying panels for access, and favors non-damaging glue pulling. Material restrictions and the current vehicle procedure must be checked separately. A photograph cannot establish paint compliance."
+            },
+            {
+              "id": "keco-controlled-pulls",
+              "title": "KECO precision lifter demonstration",
+              "url": "https://www.kecotabs.com/blogs/all/crease-killer-precision-lifter",
+              "locator": "Transcript: initial crease correction; flexible-tab reduction; closing incremental-pull advice",
+              "status": "Primary manufacturer transcript reread November 4, 2026. Its deliberate overpull demonstrations are excluded.",
+              "passage": "The tutorial aligns a crease tab with the low, demonstrates flexible tabs for initial reduction and narrow tabs for later detail, then checks the panel between incremental pulls. It warns that off-center placement and overpulling can damage metal. This supports a qualitative technique, not a validated plan for this vehicle."
+            }
+          ],
+          "repair_actions_validated": false,
+          "limits": "Qualitative prototype guidance. The area is approximate; depth, force, exact contact points and repair quality are not measured.",
+          "image_fingerprint": "b709a9e7618500b383ae22efc67c1d9ef30344aa62a57058b66e237aaa7a6732"
+        }
+      },
+      "after": {
+        "file": "ncpdr-small-ding-after.webp",
+        "sha256": "7a845838861a4410e3ac6a0f489a5c0c36941985859e046298f720fe415280fc",
+        "recorded_at": "2026-11-05T15:50:26.174708+00:00",
+        "result": {
+          "mode": "zen",
+          "visible_evidence": "The current photo shows a gold/bronze panel with a diagonal seam along the left edge and a smooth, unbroken highlight across the adjacent surface. No localized crease or depression is apparent in this closer, differently lit view.",
+          "dent_region": null,
+          "dent_shape": "nearly_flat",
+          "assumptions": [
+            "The panel appears nearly flat under this lighting, but a normal photo cannot establish that the metal is fully flat.",
+            "Paint integrity, coating condition, panel material and thickness remain unverified.",
+            "The previous creased low cannot be confidently localized in the changed view."
+          ],
+          "confidence": "low",
+          "where_to_work": "Inspect the gold panel just right of the diagonal seam along the left edge, including the area where the prior low was circled; keep pulling tools off the panel.",
+          "reason": "The current view looks nearly flat, so finish evaluation is more appropriate than repeating the earlier pull; a smoother photo does not certify completion.",
+          "comparison": {
+            "view_match": "different",
+            "change": "cannot_judge",
+            "evidence": "The crop, angle and lighting differ markedly from the previous image, and the prior annotation is absent, so visible shape change cannot be judged."
+          },
+          "selection": {
+            "visible_evidence": "The current photo shows a gold/bronze panel with a diagonal seam along the left edge and a smooth, unbroken highlight across the adjacent surface. No localized crease or depression is apparent in this closer, differently lit view.",
+            "dent_region": null,
+            "dent_shape": "nearly_flat",
+            "assumptions": [
+              "The panel appears nearly flat under this lighting, but a normal photo cannot establish that the metal is fully flat.",
+              "Paint integrity, coating condition, panel material and thickness remain unverified.",
+              "The previous creased low cannot be confidently localized in the changed view."
+            ],
+            "confidence": "low",
+            "card_id": "finish_check",
+            "where_to_work": "Inspect the gold panel just right of the diagonal seam along the left edge, including the area where the prior low was circled; keep pulling tools off the panel.",
+            "reason": "The current view looks nearly flat, so finish evaluation is more appropriate than repeating the earlier pull; a smoother photo does not certify completion.",
+            "comparison": {
+              "view_match": "different",
+              "change": "cannot_judge",
+              "evidence": "The crop, angle and lighting differ markedly from the previous image, and the prior annotation is absent, so visible shape change cannot be judged."
+            }
+          },
+          "status": "ready",
+          "next_action": {
+            "id": "finish_check",
+            "title": "End pulling and check the finish",
+            "kind": "inspection",
+            "shapes": ["nearly_flat"],
+            "tools": "PDR light and the applicable paint-inspection equipment",
+            "approach": "When the main dent is no longer apparent, switch from reshaping to finish evaluation.",
+            "steps": [
+              "Remove the pulling tool. Do not repeat the earlier pull on a panel that now appears smooth.",
+              "Sweep the PDR light over the former dent and its edges to inspect for localized reflection breaks.",
+              "Complete the applicable post-repair paint inspection. The current image supports a visual assessment, not certification of a finished repair."
+            ],
+            "expected_change": "No metal change is intended. The aim is to find any remaining distortion or coating concern before further correction.",
+            "stop_when": "Keep correction tools off the panel unless a remaining defect is identified. A smoother photograph alone does not establish a completed repair.",
+            "source_ids": ["carcosmetics-pdr", "rivian-pdr-2023"],
+            "scope": "Use when the current image appears nearly flat, even when prior repair actions are unknown."
+          },
+          "physical_preconditions": [],
+          "sources": [
+            {
+              "id": "rivian-pdr-2023",
+              "title": "Rivian PDR statement",
+              "url": "https://oemonestop.com/sites/default/files/Rivian_POS_Paintless-Dent-Repair%282-2-23%29.pdf",
+              "locator": "RCI-52-22-002-2, page 1, February 2, 2023",
+              "status": "Historical OEM statement. Indexed text checked November 4, 2026. Current vehicle-specific applicability remains unresolved.",
+              "passage": "For 2022+ R1T and R1S vehicles, the statement requires 30X paint checks before and after repair, prohibits modifying panels for access, and favors non-damaging glue pulling. Material restrictions and the current vehicle procedure must be checked separately. A photograph cannot establish paint compliance."
+            },
+            {
+              "id": "carcosmetics-pdr",
+              "title": "Car Cosmetics PDR technique FAQ",
+              "url": "https://www.carcosmetics.com/en/service/frequently-asked-questions-faq/",
+              "locator": "Reflection board/PDR lamp; cold glue procedure; PDR suitability",
+              "status": "Primary PDR supplier guidance read November 4, 2026. Cold-glue details do not apply to every adhesive system.",
+              "passage": "The FAQ describes controlled external pulling, checking under a PDR lamp after each pull, and correcting a confirmed high with a knockdown. Intact original paint and damage shape affect suitability. Lamp reflections help locate remaining lows and highs."
+            }
+          ],
+          "repair_actions_validated": false,
+          "limits": "Qualitative prototype guidance. The area is approximate; depth, force, exact contact points and repair quality are not measured.",
+          "image_fingerprint": "4ae252ea6880f60680916c84c6ab3625e76bb9e804c9ab258de32b594a2c5775"
+        }
+      }
+    }
+  }
+}

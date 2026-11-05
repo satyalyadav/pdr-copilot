@@ -1,6 +1,6 @@
 # Real photos for manual testing
 
-These original downloaded images are not loaded automatically by the app. Adding them did not change app behavior. The image files are local-only and ignored by Git because no reuse license was established; download them from the URLs in `sources.json` if needed.
+These original downloads support manual tests. Copies of five pairs also appear in the app's **More photo examples** gallery with saved AI assessments. The gallery excludes the presentation's Rivian pair and the Dent Time reflection pair. Originals in this directory are ignored by Git; gallery copies are in `frontend/src/assets/examples/`. Reuse licenses remain unverified; provenance and download URLs are in `sources.json`.
 
 For a conditional repair-action example, use `ncpdr-small-ding-before.webp`, then its corresponding after photo. The before image already contains the publisher’s white circle; it is not an app annotation. A live check selected a controlled glue pull with unconfirmed prerequisites. This subtle ding is less visually dramatic.
 

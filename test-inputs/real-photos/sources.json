@@ -112,5 +112,25 @@
     "bytes": 105604,
     "pairing": "Publisher presents corresponding before/result; no intermediate stages verified",
     "reuse_license": "not verified"
+  },
+  {
+    "file": "ncpdr-small-ding-before.webp",
+    "page": "https://ncpdr.co.uk/pdr-gallery/",
+    "image_url": "https://ncpdr.co.uk/wp-content/uploads/2026/03/1_Before.webp",
+    "publisher_alt": "1_Before",
+    "bytes": 42036,
+    "source": "N.C.Auto PDR",
+    "pairing": "Publisher gallery before/after labels; actual actions and capture conditions unverified. White circle is already present in the publisher before image.",
+    "reuse_license": "not verified"
+  },
+  {
+    "file": "ncpdr-small-ding-after.webp",
+    "page": "https://ncpdr.co.uk/pdr-gallery/",
+    "image_url": "https://ncpdr.co.uk/wp-content/uploads/2026/03/1_After.webp",
+    "publisher_alt": "1_After",
+    "bytes": 63642,
+    "source": "N.C.Auto PDR",
+    "pairing": "Publisher gallery before/after labels; actual actions and capture conditions unverified. White circle is already present in the publisher before image.",
+    "reuse_license": "not verified"
   }
 ]

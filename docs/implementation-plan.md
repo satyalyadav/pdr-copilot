@@ -1,4 +1,6 @@
-# PDR inspection prototype
+# PDR inspection prototype (historical plan)
+
+Superseded November 4, 2026 by the normal-photo copilot described in [README.md](../README.md) and [verification.md](verification.md). The current flow calls vision guidance directly, supports card-based repair proposals and reassessment, and has no automatic local-checklist fallback.
 
 Scope: CONTEXT.md, working local prototype only. OpenCode Go hosts the LLM. No slides or deployment.
 

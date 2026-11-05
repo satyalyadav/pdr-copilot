@@ -608,7 +608,8 @@ footer {
   font-size: 14px;
 }
 .precision-note {
-  margin-bottom: 18px;
+  padding-top: 12px;
+  border-top: 1px solid #d2dde0;
 }
 .precision-figures {
   display: grid;
@@ -631,7 +632,7 @@ footer {
 .precision-figures img {
   display: block;
   width: 100%;
-  max-height: 330px;
+  max-height: 270px;
   object-fit: contain;
   background: #1c3038;
   margin-bottom: 10px;
@@ -656,7 +657,7 @@ footer {
 .profile-plot {
   display: grid;
   grid-template-columns: 48px minmax(0, 1fr);
-  height: 260px;
+  height: 220px;
   margin: 14px 0 8px;
 }
 .profile-axis {
@@ -686,32 +687,122 @@ footer {
 .precision-result > p + p {
   margin-top: 6px;
 }
-.precision-next {
+.photo-examples {
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid #cad8dd;
+  scroll-margin-top: 20px;
+}
+.examples-intro {
+  margin: 6px 0 16px;
+  color: #526b76;
+  font-size: 14px;
+}
+.examples-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  align-items: start;
+}
+.example-card {
+  min-width: 0;
+  padding: 16px;
   background: white;
   border: 1px solid #d2dde0;
   border-radius: 8px;
-  padding: 16px;
 }
-.precision-next > p {
-  margin: 6px 0 12px;
-  font-size: 17px;
+.example-photos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 12px 0;
 }
-.precision-next summary,
-.precision-method summary {
+.example-photos figure {
+  min-width: 0;
+}
+.example-photos figcaption {
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: #526b76;
+}
+.example-photos img {
+  display: block;
+  width: 100%;
+  height: 220px;
+  object-fit: contain;
+  background: #edf1f2;
+}
+.example-output p {
+  margin-bottom: 12px;
+}
+.example-output span {
+  display: block;
+  color: #526b76;
+  font-size: 13px;
+  margin-bottom: 3px;
+}
+.example-card summary {
   color: #276779;
-  width: fit-content;
 }
-.precision-next details p,
-.precision-next details li,
-.precision-method p {
-  margin-top: 10px;
+.example-assessment {
+  margin: 14px 0;
 }
-.precision-next details a {
+.example-assessment h4,
+.example-assessment p,
+.example-assessment li {
+  margin: 0 0 9px;
+}
+.example-pause {
+  padding-left: 10px;
+  border-left: 2px solid #b46617;
+}
+.example-source {
   display: inline-block;
-  margin-right: 16px;
+  margin-top: 12px;
+  font-size: 13px;
 }
-.precision-method {
-  margin: 16px 0;
+@media (max-width: 760px) {
+  .examples-grid {
+    grid-template-columns: 1fr;
+  }
+  .example-photos img {
+    height: 180px;
+  }
+}
+.guidance-sources {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid #cad8dd;
+}
+.guidance-sources summary {
+  color: #276779;
+  font-size: 17px;
+  font-weight: 600;
+}
+.sources-intro {
+  margin-top: 10px;
+  color: #526b76;
+}
+.sources-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 28px;
+  padding: 0;
+  margin: 16px 0 0;
+  list-style: none;
+}
+.sources-list li {
+  min-width: 0;
+}
+.sources-list p {
+  margin-top: 4px;
+  font-size: 14px;
+  max-width: 60ch;
+}
+@media (max-width: 760px) {
+  .sources-list {
+    grid-template-columns: 1fr;
+  }
 }
 .spin {
   animation: spin 1s linear infinite;
