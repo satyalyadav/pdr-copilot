@@ -86,6 +86,11 @@ summary:focus-visible {
   padding: 0 4.5vw;
   gap: 20px;
 }
+.case-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 .brand {
   display: flex;
   align-items: center;
@@ -617,8 +622,17 @@ footer {
     padding: 12px 12px 20px;
   }
   .app-header {
-    padding: 0 12px;
-    height: 54px;
+    padding: 10px 12px;
+    min-height: 54px;
+    height: auto;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+  }
+  .case-actions {
+    gap: 6px;
+  }
+  .case-actions .button {
+    padding: 8px 10px;
   }
   .workspace {
     display: block;

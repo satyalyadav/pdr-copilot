@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Download, ImagePlus, LoaderCircle, ScanLine } from 'lucide-react'
+import { Download, ImagePlus, LoaderCircle, RotateCcw, ScanLine } from 'lucide-react'
 import { request } from './api'
 import { GuidancePanel } from './GuidancePanel'
 import type { Capture, CaseContext, CopilotResult, Cycle, Outcome } from './types'
@@ -95,6 +95,24 @@ export function App() {
     setShowPrevious(false)
   }
 
+  function resetCase() {
+    controller.current?.abort()
+    controller.current = null
+    objectUrls.current.forEach((url) => URL.revokeObjectURL(url))
+    objectUrls.current = []
+    if (upload.current) upload.current.value = ''
+    sessionId.current = crypto.randomUUID()
+    setCaptures([])
+    setSelectedId('')
+    setCycles([])
+    setNote('')
+    setOutcome('not_reported')
+    setError('')
+    setBusy(false)
+    setShowPrevious(false)
+    requestAnimationFrame(() => document.getElementById('choose-photo')?.focus())
+  }
+
   async function assess() {
     if (!capture || busy) return
     const abort = new AbortController()
@@ -138,6 +156,7 @@ export function App() {
         body: form,
         signal: abort.signal,
       })
+      if (abort.signal.aborted || controller.current !== abort) return
       const cycle: Cycle = {
         id: crypto.randomUUID(),
         captureId: capture.id,
@@ -161,10 +180,13 @@ export function App() {
         document.getElementById('assessment-heading')?.focus({ preventScroll: true })
       }, 0)
     } catch (err) {
-      if (!abort.signal.aborted)
+      if (!abort.signal.aborted && controller.current === abort)
         setError(err instanceof Error ? err.message : 'Review failed. Retry the assessment.')
     } finally {
-      if (!abort.signal.aborted) setBusy(false)
+      if (controller.current === abort) {
+        controller.current = null
+        if (!abort.signal.aborted) setBusy(false)
+      }
     }
   }
 
@@ -195,10 +217,17 @@ export function App() {
           </span>
           <span>PDR copilot</span>
         </div>
-        {cycles.length > 0 && (
-          <button className="button secondary" onClick={exportCase}>
-            <Download size={16} /> Export case
-          </button>
+        {(captures.length > 0 || error) && (
+          <div className="case-actions">
+            <button className="button secondary" onClick={resetCase}>
+              <RotateCcw size={16} /> Reset case
+            </button>
+            {cycles.length > 0 && (
+              <button className="button secondary" onClick={exportCase}>
+                <Download size={16} /> Export case
+              </button>
+            )}
+          </div>
         )}
       </header>
       <main>
@@ -226,17 +255,18 @@ export function App() {
         />
         <div className="workspace">
           <section className="inspection" aria-label="Dent photo">
-            <div className="section-toolbar">
-              <h2>{capture?.title ?? 'Your dent photo'}</h2>
-              <button
-                className="button secondary"
-                onClick={() => upload.current?.click()}
-                disabled={busy}
-              >
-                <ImagePlus size={17} />
-                {capture ? 'Add next photo' : 'Add photo'}
-              </button>
-            </div>
+            {capture && (
+              <div className="section-toolbar">
+                <h2>{capture.title}</h2>
+                <button
+                  className="button secondary"
+                  onClick={() => upload.current?.click()}
+                  disabled={busy}
+                >
+                  <ImagePlus size={17} /> Add next photo
+                </button>
+              </div>
+            )}
             {capture ? (
               <>
                 <div className="viewer-shell">
@@ -335,7 +365,11 @@ export function App() {
                 <ImagePlus size={36} />
                 <h3>Start with a dent photo</h3>
                 <p>Get a repair suggestion, make one adjustment, then add the next photo.</p>
-                <button className="button primary" onClick={() => upload.current?.click()}>
+                <button
+                  id="choose-photo"
+                  className="button primary"
+                  onClick={() => upload.current?.click()}
+                >
                   Choose photo
                 </button>
               </div>
@@ -392,7 +426,7 @@ export function App() {
           </section>
         )}
         <footer>
-          Keep one dent per case. This tab holds your case until reload; export to keep the record.
+          Keep one dent per case. Export to keep the record before resetting or reloading.
         </footer>
       </main>
     </>

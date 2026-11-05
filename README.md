@@ -23,7 +23,7 @@ The key stays on the backend. The configured model is DeepSeek V4.1 Flash throug
 1. Upload a dent photo and select **Assess image**. Read the visible evidence, focus area and proposed next action beside the photo. The outline locates damage approximately; it is not a tool-placement measurement.
 2. Review the approach, tools, steps and expected change. Assumptions and physical applicability conditions remain available below the plan. No expert approval or confirmation checkbox is required to see guidance.
 3. Add the next photo and select **Reassess image**. Action notes and your own observations are optional; the system assesses the result. A reported raised spot excludes another pull, and a reported coating concern stops corrections without depending on the provider.
-4. Browse **Case photos** and use **Export case** to retain observations, plans and notes as JSON. Export excludes photo bytes. Keep one dent per case; reloading clears the tab.
+4. Browse **Case photos** and use **Export case** to retain observations, plans and notes as JSON. Export excludes photo bytes. **Reset case** clears the photos, assessments and notes so you can start over without reloading. Keep one dent per case; reloading also clears the tab.
 
 For the primary demonstration, upload `test-inputs/real-photos/denttime-rivian-before.webp`, assess it, then add `denttime-rivian-after.webp`. Leave the action note blank when individual repair steps are unknown. These are recorded shop photos, not a repair caused by this app. Images stay local because reuse permission is unverified. The paired after photo is never included in the first assessment.
 
