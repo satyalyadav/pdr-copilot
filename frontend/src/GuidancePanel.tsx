@@ -52,69 +52,78 @@ export function GuidancePanel({
           result && (
             <>
               {result.comparison && (
-                <section className="change-result">
-                  <h3>{changeLabels[result.comparison.change]}</h3>
-                  <p>{result.comparison.evidence}</p>
-                  <small>Visual comparison only; lighting and angle can affect appearance.</small>
+                <section className={`change-result change-${result.comparison.change}`}>
+                  <p className="change-status">
+                    <span>Since the previous photo:</span>{' '}
+                    <strong>{changeLabels[result.comparison.change]}</strong>
+                  </p>
+                  <details>
+                    <summary>What changed</summary>
+                    <p>{result.comparison.evidence}</p>
+                    <p className="note">
+                      Visual comparison only; lighting and angle can affect appearance.
+                    </p>
+                  </details>
                 </section>
               )}
-              <section className="ai-observation">
-                <h3>What the image shows</h3>
-                <p className="visible-evidence">{result.visible_evidence}</p>
-                <p className="work-location">
-                  <strong>Focus area:</strong> {result.where_to_work}
-                </p>
-                <p className="action-reason">{result.reason}</p>
-                {result.confidence === 'low' && (
-                  <p className="muted">The image interpretation has low confidence.</p>
-                )}
-              </section>
               <section className={`action-plan ${result.status === 'stop' ? 'stopped' : ''}`}>
                 {result.status === 'proposal' && (
                   <p className="plan-label">Proposed adjustment, based on this photo</p>
                 )}
                 <h3>{result.next_action.title}</h3>
-                <p>{result.next_action.approach}</p>
-                <p className="plan-tools">
-                  <strong>Tools:</strong> {result.next_action.tools}
-                </p>
+                {result.confidence === 'low' && (
+                  <p className="low-confidence">The image interpretation has low confidence.</p>
+                )}
+                <dl className="plan-facts">
+                  <dt>Focus area</dt>
+                  <dd>{result.where_to_work}</dd>
+                  <dt>Tools</dt>
+                  <dd>{result.next_action.tools}</dd>
+                </dl>
                 <ol className="action-steps">
                   {result.next_action.steps.map((step) => (
                     <li key={step}>{step}</li>
                   ))}
                 </ol>
-                <div className="expected-change">
-                  <h3>What to expect</h3>
-                  <p>{result.next_action.expected_change}</p>
+                <div className="outcome-pair">
+                  <div className="expected-change">
+                    <h4>What to expect</h4>
+                    <p>{result.next_action.expected_change}</p>
+                  </div>
+                  <div className="stop-condition">
+                    <h4>Pause</h4>
+                    <p>{result.next_action.stop_when}</p>
+                  </div>
                 </div>
-                <p className="stop-condition">
-                  <strong>Pause:</strong> {result.next_action.stop_when}
-                </p>
               </section>
-              <details className="source-library">
-                <summary>Assumptions and physical checks</summary>
-                {result.assumptions.map((assumption) => (
-                  <p key={assumption}>{assumption}</p>
-                ))}
-                {result.physical_preconditions.map((condition) => (
-                  <p key={condition}>{condition}</p>
-                ))}
-                <p>{result.next_action.scope}</p>
-                <p>{result.limits}</p>
-              </details>
-              <details className="source-library">
-                <summary>Repair knowledge and sources</summary>
-                {result.sources.map((source) => (
-                  <article key={source.id}>
-                    <a href={source.url} target="_blank" rel="noreferrer">
-                      {source.title}
-                    </a>
-                    <p>{source.passage}</p>
-                    <small>{source.locator}</small>
-                    <small>{source.status}</small>
-                  </article>
-                ))}
-              </details>
+              <div className="more-details">
+                <details>
+                  <summary>Assumptions and physical checks</summary>
+                  <p>{result.reason}</p>
+                  <p>{result.next_action.approach}</p>
+                  {result.assumptions.map((assumption) => (
+                    <p key={assumption}>{assumption}</p>
+                  ))}
+                  {result.physical_preconditions.map((condition) => (
+                    <p key={condition}>{condition}</p>
+                  ))}
+                  <p>{result.next_action.scope}</p>
+                  <p>{result.limits}</p>
+                </details>
+                <details>
+                  <summary>Repair knowledge and sources</summary>
+                  {result.sources.map((source) => (
+                    <article key={source.id}>
+                      <a href={source.url} target="_blank" rel="noreferrer">
+                        {source.title}
+                      </a>
+                      <p>{source.passage}</p>
+                      <small>{source.locator}</small>
+                      <small>{source.status}</small>
+                    </article>
+                  ))}
+                </details>
+              </div>
             </>
           )
         )}

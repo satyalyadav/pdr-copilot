@@ -19,6 +19,12 @@ The software can connect photo-specific observations to a curated method, show t
 
 The supplied pair shows a recorded shop repair. No synchronized intermediate actions are known. Neither the replay nor passing tests establish that the proposed method is correct for this panel, that AI advice caused a repair, or that a novice matches expert performance. Exact contact points, force, material, coating integrity and current vehicle authorization remain unmeasured. Physical methods are conditional proposals with explicit applicability conditions.
 
+## Compact assessment layout
+
+Kiro Claude Opus 5.5 High implemented a presentation-only redesign. The observation paragraph no longer renders; the focus, adjustment, complete steps, tools, expected change and pause condition remain visible. Secondary reasoning is under the collapsed physical-check details, and comparison evidence is expandable. The case export still retains the full observation.
+
+Chrome checks used the recorded real-provider before/after responses, without new provider calls. They exercised assessment, stale-plan suppression on a new photo, reassessment, export, collapsed details, and readable steps at 1366×900, 1280×720 and 390×844. No horizontal overflow or page errors occurred. At 1366×900 the full collapsed assessment fits in the viewport; at 1280×720 the end of the pause box is just below the fold. Mobile uses natural single-column scrolling. Evidence: `.audit/compact-ui-check.json`, `.audit/compact-ui-export.json`, `.audit/compact-ui-desktop.png`, `.audit/compact-ui-laptop.png`, `.audit/compact-ui-after.png`, `.audit/compact-ui-mobile.png`. Typecheck, formatting and production build passed. No backend or guidance-policy changes were made.
+
 ## Earlier checks
 
 The earlier verification counted an expert referral as a successful live loop. That established request/rendering behavior but failed the current product acceptance criteria. Its records remain in `.audit/live-ui-check.json`, `.audit/live-ui-export.json` and `.audit/live-current-pair.json`; they are historical evidence, not acceptance of the current novice workflow.
