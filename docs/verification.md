@@ -33,6 +33,16 @@ The vehicle-setup form was removed because it only passed optional model context
 
 The empty screen has one Choose photo button. Reset case clears uploaded photos, assessments, notes, observations and errors, revokes preview URLs, and creates a fresh session. It remains available during assessment; aborted or stale responses cannot restore a cleared case or stop a newer request. Chrome checks used recorded API fixtures and deliberately delayed responses that ignored cancellation to verify the stale-response guard. They also checked reset after an error, same-file re-upload, cleared export history, keyboard focus and the mobile header without overflow. Evidence: `.audit/reset-ui-check.json` and `.audit/reset-ui-export.json`. Typecheck, formatting and production build passed.
 
+## Synthetic calibrated deflectometry
+
+The optional Precision demo generates 16 images from a virtual pinhole camera, known screen geometry and a smooth compact dent, using specular reflection. OpenCV phase decoding and a separate reflection/integration solver reconstruct the height. The known dent shape is not an input to reconstruction. It is used to render the captures and evaluate reconstruction error. The flat outer edge anchors the height reference; image coordinates and all distances are calibrated by construction.
+
+Five new numerical/API tests cover the prescribed original and improved depths, exact unchanged images, additional depths and resolution, noisy captures and missing-frame rejection. The full suite passed **28 tests** (`.audit/precision-tests.log`). Typecheck, lint, formatting and the production build passed (`.audit/precision-build.log`).
+
+The actual Chrome/API/renderer/reconstruction flow passed original, scripted-improvement and unchanged states, matched estimated profiles to their known synthetic references, retained a loaded photo case when switching modes, and verified reset, mobile layout and absence of page errors. No response fixtures or external model calls were used. Evidence: `.audit/precision-ui-check.json`, `.audit/precision-original.png`, `.audit/precision-improved.png`, `.audit/precision-mobile.png` and `.audit/verify-precision-ui.py`. The job-owned browser exited. The demo shares existing source-backed repair cards; it does not ask an LLM to invent measurements.
+
+These results validate a numerical round trip in an ideal virtual setup, not physical calibration, real-car accuracy or a tool-action outcome model. The improvement is prescribed, and the GUI labels it as scripted. Ordinary uploaded photos remain in photo mode and do not receive calibrated depth measurements.
+
 ## Earlier checks
 
 The earlier verification counted an expert referral as a successful live loop. That established request/rendering behavior but failed the current product acceptance criteria. Its records remain in `.audit/live-ui-check.json`, `.audit/live-ui-export.json` and `.audit/live-current-pair.json`; they are historical evidence, not acceptance of the current novice workflow.

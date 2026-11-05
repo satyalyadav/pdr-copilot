@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Download, ImagePlus, LoaderCircle, RotateCcw, ScanLine } from 'lucide-react'
 import { request } from './api'
 import { GuidancePanel } from './GuidancePanel'
+import { PrecisionDemo } from './PrecisionDemo'
 import type { Capture, CaseContext, CopilotResult, Cycle, Outcome } from './types'
 
 const caseContext: CaseContext = { vehicle: '', material: 'unknown' }
@@ -16,6 +17,7 @@ const outcomes: { id: Outcome; label: string }[] = [
 ]
 
 export function App() {
+  const [mode, setMode] = useState<'photo' | 'precision'>('photo')
   const [captures, setCaptures] = useState<Capture[]>([])
   const [selectedId, setSelectedId] = useState('')
   const [cycles, setCycles] = useState<Cycle[]>([])
@@ -217,7 +219,7 @@ export function App() {
           </span>
           <span>PDR copilot</span>
         </div>
-        {(captures.length > 0 || error) && (
+        {mode === 'photo' && (captures.length > 0 || error) && (
           <div className="case-actions">
             <button className="button secondary" onClick={resetCase}>
               <RotateCcw size={16} /> Reset case
@@ -231,203 +233,236 @@ export function App() {
         )}
       </header>
       <main>
-        <div className="page-intro">
-          <h1>Assess. Adjust. Reassess.</h1>
-          <span className="prototype-label">Photo-guided prototype</span>
+        <div className="mode-switch" role="group" aria-label="Demo mode">
+          <button
+            className="button secondary"
+            aria-pressed={mode === 'photo'}
+            disabled={busy}
+            onClick={() => setMode('photo')}
+          >
+            Photo copilot
+          </button>
+          <button
+            className="button secondary"
+            aria-pressed={mode === 'precision'}
+            disabled={busy}
+            onClick={() => setMode('precision')}
+          >
+            Precision demo
+          </button>
         </div>
-        {configured === false && (
-          <p className="error">
-            AI guidance needs OPENCODE_API_KEY in the backend .env file. Add it and restart the
-            backend.
-          </p>
-        )}
-        <input
-          ref={upload}
-          type="file"
-          accept="image/png,image/jpeg,image/webp"
-          multiple
-          hidden
-          aria-label="Upload dent photos"
-          onChange={(event) => {
-            addPhotos(event.target.files)
-            event.target.value = ''
-          }}
-        />
-        <div className="workspace">
-          <section className="inspection" aria-label="Dent photo">
-            {capture && (
-              <div className="section-toolbar">
-                <h2>{capture.title}</h2>
-                <button
-                  className="button secondary"
-                  onClick={() => upload.current?.click()}
-                  disabled={busy}
-                >
-                  <ImagePlus size={17} /> Add next photo
-                </button>
-              </div>
+        <div className="page-intro">
+          <h1>{mode === 'photo' ? 'Assess. Adjust. Reassess.' : 'Precision demo'}</h1>
+          <span className="prototype-label">
+            {mode === 'photo' ? 'Photo-guided prototype' : 'Synthetic calibrated setup'}
+          </span>
+        </div>
+        {mode === 'precision' ? (
+          <PrecisionDemo />
+        ) : (
+          <>
+            {configured === false && (
+              <p className="error">
+                AI guidance needs OPENCODE_API_KEY in the backend .env file. Add it and restart the
+                backend.
+              </p>
             )}
-            {capture ? (
-              <>
-                <div className="viewer-shell">
-                  <div className="image-plane">
-                    <img
-                      className="panel-image"
-                      src={capture.url}
-                      alt={`Current dent photo: ${capture.title}`}
-                    />
-                    {region && (
-                      <div
-                        className="dent-region"
-                        style={{
-                          left: `${region.x * 100}%`,
-                          top: `${region.y * 100}%`,
-                          width: `${region.width * 100}%`,
-                          height: `${region.height * 100}%`,
-                        }}
-                      >
-                        <span>Suggested dent area</span>
+            <input
+              ref={upload}
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+              multiple
+              hidden
+              aria-label="Upload dent photos"
+              onChange={(event) => {
+                addPhotos(event.target.files)
+                event.target.value = ''
+              }}
+            />
+            <div className="workspace">
+              <section className="inspection" aria-label="Dent photo">
+                {capture && (
+                  <div className="section-toolbar">
+                    <h2>{capture.title}</h2>
+                    <button
+                      className="button secondary"
+                      onClick={() => upload.current?.click()}
+                      disabled={busy}
+                    >
+                      <ImagePlus size={17} /> Add next photo
+                    </button>
+                  </div>
+                )}
+                {capture ? (
+                  <>
+                    <div className="viewer-shell">
+                      <div className="image-plane">
+                        <img
+                          className="panel-image"
+                          src={capture.url}
+                          alt={`Current dent photo: ${capture.title}`}
+                        />
+                        {region && (
+                          <div
+                            className="dent-region"
+                            style={{
+                              left: `${region.x * 100}%`,
+                              top: `${region.y * 100}%`,
+                              width: `${region.width * 100}%`,
+                              height: `${region.height * 100}%`,
+                            }}
+                          >
+                            <span>Suggested dent area</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    {previous && (
+                      <div className="previous-photo">
+                        <button
+                          className="text-button"
+                          onClick={() => setShowPrevious(!showPrevious)}
+                        >
+                          {showPrevious ? 'Hide' : 'View'} previous photo
+                        </button>
+                        {showPrevious && (
+                          <figure>
+                            <img src={previous.url} alt={`Previous photo: ${previous.title}`} />
+                            <figcaption>{previous.title}</figcaption>
+                          </figure>
+                        )}
                       </div>
                     )}
-                  </div>
-                </div>
-                {previous && (
-                  <div className="previous-photo">
-                    <button className="text-button" onClick={() => setShowPrevious(!showPrevious)}>
-                      {showPrevious ? 'Hide' : 'View'} previous photo
-                    </button>
-                    {showPrevious && (
-                      <figure>
-                        <img src={previous.url} alt={`Previous photo: ${previous.title}`} />
-                        <figcaption>{previous.title}</figcaption>
-                      </figure>
+                    {previousCycle && (
+                      <section className="adjustment" aria-label="Adjustment since previous photo">
+                        <h3>Anything to add? Optional</h3>
+                        <textarea
+                          aria-label="Action since previous photo"
+                          value={note}
+                          onChange={(event) => setNote(event.target.value)}
+                          maxLength={600}
+                          rows={2}
+                          disabled={busy}
+                          placeholder="Describe any known actions. Leave blank if the repair steps are unknown."
+                        />
+                        <label>
+                          Your observation, optional
+                          <select
+                            value={outcome}
+                            disabled={busy}
+                            onChange={(event) => setOutcome(event.target.value as Outcome)}
+                          >
+                            {outcomes.map((item) => (
+                              <option value={item.id} key={item.id}>
+                                {item.label}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                      </section>
                     )}
+                    <div className="assess-row">
+                      <span>
+                        {selectedCycle
+                          ? 'Add the next photo after a correction.'
+                          : previousCycle
+                            ? 'Compare with the last successful assessment.'
+                            : 'Your photo is sent only when you assess.'}
+                      </span>
+                      <button
+                        className="button primary"
+                        onClick={() => void assess()}
+                        disabled={
+                          busy ||
+                          configured !== true ||
+                          Boolean(selectedCycle && selectedCycle.id !== latest?.id)
+                        }
+                      >
+                        {busy ? (
+                          <LoaderCircle size={17} className="spin" />
+                        ) : (
+                          <ScanLine size={17} />
+                        )}
+                        {busy
+                          ? 'Reviewing…'
+                          : previousCycle
+                            ? 'Reassess image'
+                            : selectedCycle
+                              ? 'Assess again'
+                              : 'Assess image'}
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <div className="upload-empty">
+                    <ImagePlus size={36} />
+                    <h3>Start with a dent photo</h3>
+                    <p>Get a repair suggestion, make one adjustment, then add the next photo.</p>
+                    <button
+                      id="choose-photo"
+                      className="button primary"
+                      onClick={() => upload.current?.click()}
+                    >
+                      Choose photo
+                    </button>
                   </div>
                 )}
-                {previousCycle && (
-                  <section className="adjustment" aria-label="Adjustment since previous photo">
-                    <h3>Anything to add? Optional</h3>
-                    <textarea
-                      aria-label="Action since previous photo"
-                      value={note}
-                      onChange={(event) => setNote(event.target.value)}
-                      maxLength={600}
-                      rows={2}
-                      disabled={busy}
-                      placeholder="Describe any known actions. Leave blank if the repair steps are unknown."
-                    />
-                    <label>
-                      Your observation, optional
-                      <select
-                        value={outcome}
+              </section>
+              <div ref={resultPanel}>
+                <GuidancePanel
+                  result={result}
+                  busy={busy}
+                  error={error}
+                  showingPrevious={showingPrevious}
+                  pendingOutcome={outcome}
+                  saved={Boolean(selectedCycle && selectedCycle.id !== latest?.id)}
+                />
+              </div>
+            </div>
+            {captures.length > 0 && (
+              <section className="sequence">
+                <h2>Case photos</h2>
+                <div className="capture-strip">
+                  {captures.map((item, index) => {
+                    const done = cycles.some((cycle) => cycle.captureId === item.id)
+                    return (
+                      <button
+                        className={`capture ${item.id === selectedId ? 'selected' : ''}`}
+                        key={item.id}
                         disabled={busy}
-                        onChange={(event) => setOutcome(event.target.value as Outcome)}
+                        aria-pressed={item.id === selectedId}
+                        onClick={() => {
+                          setSelectedId(item.id)
+                          setError('')
+                          setShowPrevious(false)
+                        }}
                       >
-                        {outcomes.map((item) => (
-                          <option value={item.id} key={item.id}>
-                            {item.label}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-                  </section>
-                )}
-                <div className="assess-row">
-                  <span>
-                    {selectedCycle
-                      ? 'Add the next photo after a correction.'
-                      : previousCycle
-                        ? 'Compare with the last successful assessment.'
-                        : 'Your photo is sent only when you assess.'}
-                  </span>
+                        <div>
+                          <img src={item.url} alt="" />
+                          <span>{done ? 'Assessed' : 'Not assessed'}</span>
+                        </div>
+                        <strong>
+                          {index + 1}. {item.title}
+                        </strong>
+                      </button>
+                    )
+                  })}
                   <button
-                    className="button primary"
-                    onClick={() => void assess()}
-                    disabled={
-                      busy ||
-                      configured !== true ||
-                      Boolean(selectedCycle && selectedCycle.id !== latest?.id)
-                    }
+                    className="capture add-capture"
+                    onClick={() => upload.current?.click()}
+                    disabled={busy}
                   >
-                    {busy ? <LoaderCircle size={17} className="spin" /> : <ScanLine size={17} />}
-                    {busy
-                      ? 'Reviewing…'
-                      : previousCycle
-                        ? 'Reassess image'
-                        : selectedCycle
-                          ? 'Assess again'
-                          : 'Assess image'}
+                    <ImagePlus size={24} />
+                    Add next photo
                   </button>
                 </div>
-              </>
-            ) : (
-              <div className="upload-empty">
-                <ImagePlus size={36} />
-                <h3>Start with a dent photo</h3>
-                <p>Get a repair suggestion, make one adjustment, then add the next photo.</p>
-                <button
-                  id="choose-photo"
-                  className="button primary"
-                  onClick={() => upload.current?.click()}
-                >
-                  Choose photo
-                </button>
-              </div>
+              </section>
             )}
-          </section>
-          <div ref={resultPanel}>
-            <GuidancePanel
-              result={result}
-              busy={busy}
-              error={error}
-              showingPrevious={showingPrevious}
-              pendingOutcome={outcome}
-              saved={Boolean(selectedCycle && selectedCycle.id !== latest?.id)}
-            />
-          </div>
-        </div>
-        {captures.length > 0 && (
-          <section className="sequence">
-            <h2>Case photos</h2>
-            <div className="capture-strip">
-              {captures.map((item, index) => {
-                const done = cycles.some((cycle) => cycle.captureId === item.id)
-                return (
-                  <button
-                    className={`capture ${item.id === selectedId ? 'selected' : ''}`}
-                    key={item.id}
-                    disabled={busy}
-                    aria-pressed={item.id === selectedId}
-                    onClick={() => {
-                      setSelectedId(item.id)
-                      setError('')
-                      setShowPrevious(false)
-                    }}
-                  >
-                    <div>
-                      <img src={item.url} alt="" />
-                      <span>{done ? 'Assessed' : 'Not assessed'}</span>
-                    </div>
-                    <strong>
-                      {index + 1}. {item.title}
-                    </strong>
-                  </button>
-                )
-              })}
-              <button
-                className="capture add-capture"
-                onClick={() => upload.current?.click()}
-                disabled={busy}
-              >
-                <ImagePlus size={24} />
-                Add next photo
-              </button>
-            </div>
-          </section>
+            <footer>
+              Keep one dent per case. Export to keep the record before resetting or reloading.
+            </footer>
+          </>
         )}
-        <footer>
-          Keep one dent per case. Export to keep the record before resetting or reloading.
-        </footer>
       </main>
     </>
   )

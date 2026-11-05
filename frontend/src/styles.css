@@ -585,6 +585,134 @@ footer {
   color: #5c7078;
   font-size: 14px;
 }
+.mode-switch,
+.precision-stages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.mode-switch .button[aria-pressed='true'],
+.precision-stages .button[aria-pressed='true'] {
+  background: #276779;
+  border-color: #276779;
+  color: white;
+}
+.precision-intro {
+  margin-bottom: 14px;
+  font-size: 16px;
+}
+.precision-note,
+.profile-caption {
+  color: #526b76;
+  font-size: 14px;
+}
+.precision-note {
+  margin-bottom: 18px;
+}
+.precision-figures {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.precision-figures figure {
+  padding: 16px;
+  border: 1px solid #d2dde0;
+  border-radius: 8px;
+  background: white;
+  min-width: 0;
+}
+.precision-figures figcaption {
+  font-family: 'Trebuchet MS', Arial, sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+.precision-figures img {
+  display: block;
+  width: 100%;
+  max-height: 330px;
+  object-fit: contain;
+  background: #1c3038;
+  margin-bottom: 10px;
+}
+.profile-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  font-size: 14px;
+}
+.profile-legend span::before {
+  content: '';
+  display: inline-block;
+  width: 24px;
+  margin-right: 7px;
+  vertical-align: middle;
+  border-top: 2px solid #276779;
+}
+.profile-legend .known-line::before {
+  border-top: 3px dashed #b46617;
+}
+.profile-plot {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  height: 260px;
+  margin: 14px 0 8px;
+}
+.profile-axis {
+  position: relative;
+  font-size: 14px;
+  color: #526b76;
+}
+.profile-axis span {
+  position: absolute;
+  transform: translateY(-50%);
+}
+.profile-plot svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.precision-result {
+  padding: 16px 0;
+}
+.precision-result strong {
+  font-size: 18px;
+  color: #205a6b;
+}
+.precision-result span {
+  margin-left: 18px;
+}
+.precision-result > p + p {
+  margin-top: 6px;
+}
+.precision-next {
+  background: white;
+  border: 1px solid #d2dde0;
+  border-radius: 8px;
+  padding: 16px;
+}
+.precision-next > p {
+  margin: 6px 0 12px;
+  font-size: 17px;
+}
+.precision-next summary,
+.precision-method summary {
+  color: #276779;
+  width: fit-content;
+}
+.precision-next details p,
+.precision-next details li,
+.precision-method p {
+  margin-top: 10px;
+}
+.precision-next details a {
+  display: inline-block;
+  margin-right: 16px;
+}
+.precision-method {
+  margin: 16px 0;
+}
 .spin {
   animation: spin 1s linear infinite;
 }
@@ -618,6 +746,14 @@ footer {
   }
 }
 @media (max-width: 760px) {
+  .precision-figures {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .precision-result span {
+    display: block;
+    margin: 4px 0 0;
+  }
   main {
     padding: 12px 12px 20px;
   }

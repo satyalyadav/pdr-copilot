@@ -27,13 +27,25 @@ The key stays on the backend. The configured model is DeepSeek V4.1 Flash throug
 
 For the primary demonstration, upload `test-inputs/real-photos/denttime-rivian-before.webp`, assess it, then add `denttime-rivian-after.webp`. Leave the action note blank when individual repair steps are unknown. These are recorded shop photos, not a repair caused by this app. Images stay local because reuse permission is unverified. The paired after photo is never included in the first assessment.
 
+## Precision demo
+
+Select **Precision demo** to try the calibrated synthetic setup. Switch between **Original dent**, **Scripted improvement** and **Unchanged control**. The reflected stripes and the reconstructed center profile update together. The known synthetic shape is drawn beside the estimate so the result can be checked.
+
+A virtual pinhole camera observes a reflective panel and an active stripe screen at known positions. The renderer applies the law of reflection. OpenCV decodes 16 phase-shifted images, and reflection geometry plus numerical integration recovers height using the flat outer edge as the zero reference. The reconstruction receives only those images and the calibration, not the prescribed dent depth or shape.
+
+This mode generates its images locally and uses the existing repair cards without an LLM call or new dependencies. The stage change is predefined. It demonstrates measurement in an ideal calibrated simulation, not a predicted repair, real-world accuracy, or calibrated measurements from the ordinary car photos. The normal photo copilot remains a separate mode and retains its case when switching views.
+
+A short explanation for the interview: "Known geometry lets us turn reflected patterns into a shape estimate. We compare it with the synthetic truth, then repeat after a scripted change."
+
+References: [Sandia SOFAST](https://opencsp.sandia.gov/opencsp-data/sofast-2-0-data-examples/) and [KIT's deflectometry principle and ambiguity](https://ies.iar.kit.edu/neu/multiviewdeflectometry.php). This prototype is a small independent simulation; it does not run either project's implementation.
+
 ## Guidance and limits
 
 The model describes visible damage, classifies the shape, states assumptions and chooses a technique. Python renders six curated cards: controlled low reduction, incremental crease reduction, remaining-shape inspection, finish evaluation, reported-high correction and stop for coating concerns. The selected method and image landmarks make the guidance specific to the current case. Steps, tools and expected changes come from code, not unrestricted model-written repair instructions.
 
 Repair actions are labeled **proposed adjustments**, with vehicle, coating and product applicability conditions. The prototype does not determine safe force, exact tab position, material, paint integrity or current OEM authorization from photos. It has demonstrated no physical repair, expert parity or time saving. See [source notes](docs/source-notes.md) and [verification](docs/verification.md).
 
-The normal-photo UI calls `/api/guidance`. The older `/api/analyze` stripe-tracing API remains a separate research path; readable stripes are not required by the main UI. Additional multi-angle capture and precision work are deferred.
+The normal-photo UI calls `/api/guidance`. The older `/api/analyze` stripe-tracing API remains a separate research path; readable stripes are not required by the main UI. Guided multi-angle capture and real-world calibrated acquisition remain deferred. The optional Precision demo uses a separate known virtual setup.
 
 Uploads accept PNG, JPEG or WebP, up to 12 photos per tab and 12 MB/20 million pixels per photo. The backend applies EXIF orientation and resizes to fit 960×720 for the model. Photos go to the configured external provider only when assessed; the server does not retain them.
 

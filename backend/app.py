@@ -9,6 +9,7 @@ from fastapi import FastAPI, Form, HTTPException, UploadFile
 from fastapi.responses import Response
 from pydantic import ValidationError
 
+from backend.deflectometry import Stage, precision_demo
 from backend.demo import DEMOS, render_demo
 from backend.vision import (
     MAX_BYTES,
@@ -58,6 +59,11 @@ def list_demo():
         {"id": key, "title": item["title"], "note": item["note"], "url": f"/api/demo/{key}"}
         for key, item in DEMOS.items()
     ]
+
+
+@app.get("/api/precision-demo")
+def calibrated_demo(stage: Stage = "original"):
+    return precision_demo(stage)
 
 
 @app.get("/api/demo/{demo_id}")
