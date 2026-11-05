@@ -742,6 +742,60 @@ a { color: inherit; }
 
 .scene text.note { fill: var(--graphite); }
 
+/* ---------- Slide 8: alternative approaches ---------- */
+.alts {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.alts th, .alts td {
+  text-align: left;
+  vertical-align: top;
+  font-size: calc(var(--u) * 1.45);
+  line-height: 1.4;
+  font-weight: 400;
+  padding: calc(var(--u) * 1.1) calc(var(--u) * 2) calc(var(--u) * 1.1) 0;
+  border-top: 1px solid var(--rule);
+}
+
+.alts th:last-child, .alts td:last-child { padding-right: 0; }
+
+.alts thead th {
+  border-top: 0;
+  padding-top: 0;
+  padding-bottom: calc(var(--u) * 0.6);
+  font-size: calc(var(--u) * 1.3);
+  color: var(--graphite);
+  font-weight: 600;
+}
+
+.alts tbody th {
+  width: 21%;
+  font-size: calc(var(--u) * 1.55);
+  line-height: 1.3;
+  font-weight: 640;
+  font-stretch: 88%;
+}
+
+.alts .concept { width: 44%; }
+
+.alts tbody tr:last-child > * { border-bottom: 1px solid var(--rule); }
+
+.chosen {
+  margin-top: calc(var(--u) * 2.4);
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: calc(var(--u) * 4.5);
+  align-items: start;
+}
+
+.chosen h3 { margin-bottom: calc(var(--u) * 0.6); }
+
+.forcenote {
+  border-left: calc(var(--u) * 0.32) solid var(--amber);
+  padding-left: calc(var(--u) * 1.3);
+}
+
 /* ---------- Controls ---------- */
 .controls {
   position: absolute;
@@ -889,6 +943,18 @@ a { color: inherit; }
   .scene { grid-column: auto; }
   .tile text { font-size: 11px; }
   .scene text { font-size: 24px; }
+
+  .alts thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .alts, .alts tbody, .alts tr, .alts th, .alts td { display: block; width: auto; }
+  .alts tr { padding: 14px 0; border-top: 1px solid var(--rule); }
+  .alts tbody tr:last-child { border-bottom: 1px solid var(--rule); }
+  .alts tbody tr:last-child > * { border-bottom: 0; }
+  .alts th, .alts td { border-top: 0; padding: 0; font-size: 16px; }
+  .alts tbody th, .alts .concept { width: auto; }
+  .alts tbody th { font-size: 17px; margin-bottom: 6px; }
+  .alts td + td { margin-top: 10px; }
+  .alts td::before { content: attr(data-label); content: attr(data-label) / ""; display: block; font-size: 14px; font-weight: 600; color: var(--graphite); }
+  .chosen { grid-template-columns: 1fr; gap: 24px; margin-top: 24px; }
 
   .controls {
     position: fixed;
@@ -1336,11 +1402,49 @@ a { color: inherit; }
       </div>
     </section>
 
+    <!-- 8. Alternative approaches -->
+    <section class="slide" id="slide-8" aria-roledescription="slide" aria-label="Alternative approaches considered">
+      <header class="slide-head">
+        <h2>Alternative approaches considered</h2>
+      </header>
+
+      <table class="alts" role="table">
+        <thead role="rowgroup">
+          <tr role="row"><th scope="col" role="columnheader">Approach</th><th scope="col" role="columnheader">Concept</th><th scope="col" role="columnheader">Why deferred for this prototype</th></tr>
+        </thead>
+        <tbody role="rowgroup">
+          <tr role="row">
+            <th scope="row" role="rowheader">Rule-based expert system</th>
+            <td class="concept" role="cell" data-label="Concept">Decision trees built from experienced PDR technicians' knowledge.</td>
+            <td role="cell" data-label="Why deferred">A fully rule-based system adapts poorly to the variety of dents and repair situations.</td>
+          </tr>
+          <tr role="row">
+            <th scope="row" role="rowheader">Calibrated vision and AR guidance</th>
+            <td class="concept" role="cell" data-label="Concept">Measure dent geometry with calibrated deflectometry. Show technicians where the panel still needs correction.</td>
+            <td role="cell" data-label="Why deferred">Needs specialized hardware, calibration and reliable shape reconstruction.</td>
+          </tr>
+          <tr role="row">
+            <th scope="row" role="rowheader">Autonomous robotic PDR</th>
+            <td class="concept" role="cell" data-label="Concept">Cameras, depth measurement, force sensors and robotic actuators repair the dent in a closed control loop.</td>
+            <td role="cell" data-label="Why deferred">Needs robotics expertise, physical testing and knowledge of how the panel material behaves.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="chosen">
+        <div>
+          <h3>Why we chose the AI copilot</h3>
+          <p>A human-in-the-loop copilot lets us prototype and evaluate AI repair guidance without specialized hardware or automated repair. It is a base for adding measurement and automation later.</p>
+        </div>
+        <p class="forcenote"><strong>Depth alone does not set force.</strong> A repair robot would also need force feedback, knowledge of panel properties and precise tool positioning.</p>
+      </div>
+    </section>
+
     <nav class="controls" aria-label="Slide controls">
       <button type="button" id="prev" aria-label="Previous slide">
         <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M10 2 4 8l6 6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
       </button>
-      <span class="count" id="count" aria-hidden="true">1 / 7</span>
+      <span class="count" id="count" aria-hidden="true">1 / 8</span>
       <button type="button" id="next" aria-label="Next slide">
         <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M6 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
       </button>
