@@ -208,7 +208,7 @@ textarea {
 }
 .workspace {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(400px, 1.1fr);
+  grid-template-columns: minmax(0, 0.9fr) minmax(400px, 1.2fr);
   align-items: start;
   gap: 20px;
 }
@@ -342,7 +342,7 @@ textarea {
   min-width: 0;
 }
 .guidance > h2 {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   color: #5c7078;
 }
@@ -351,12 +351,12 @@ textarea {
 }
 .plan-label {
   color: #276779;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
 }
 .action-plan h3 {
   color: #205a6b;
-  font-size: 20px;
+  font-size: 22px;
   margin-top: 2px;
 }
 .low-confidence {
@@ -370,9 +370,10 @@ textarea {
 .plan-facts {
   display: grid;
   grid-template-columns: max-content minmax(0, 1fr);
-  gap: 6px 14px;
+  gap: 8px 16px;
   margin: 12px 0 0;
-  font-size: 14px;
+  font-size: 15px;
+  line-height: 1.55;
 }
 .plan-facts dt {
   font-weight: 600;
@@ -383,9 +384,9 @@ textarea {
 }
 .action-steps {
   margin: 12px 0 0;
-  padding: 10px 14px 10px 34px;
-  font-size: 14px;
-  line-height: 1.45;
+  padding: 14px 16px 14px 36px;
+  font-size: 16px;
+  line-height: 1.6;
   background: #f6f9f9;
   border: 1px solid #e0e8ea;
   border-radius: 6px;
@@ -394,7 +395,7 @@ textarea {
   padding-left: 3px;
 }
 .action-steps li + li {
-  margin-top: 6px;
+  margin-top: 10px;
 }
 .outcome-pair {
   display: grid;
@@ -404,10 +405,11 @@ textarea {
 }
 .outcome-pair h4 {
   margin: 0 0 4px;
-  font-size: 14px;
+  font-size: 15px;
 }
 .outcome-pair p {
-  font-size: 14px;
+  font-size: 15px;
+  line-height: 1.55;
 }
 .expected-change {
   padding: 10px 12px;
@@ -429,7 +431,7 @@ textarea {
 .more-details {
   margin-top: 14px;
   border-top: 1px solid #d6e0e4;
-  font-size: 14px;
+  font-size: 15px;
   color: #3d5c69;
 }
 .more-details details {
@@ -654,7 +656,7 @@ footer {
     padding: 12px;
   }
   .action-plan h3 {
-    font-size: 18px;
+    font-size: 20px;
   }
 }
 @media (prefers-reduced-motion: reduce) {

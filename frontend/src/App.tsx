@@ -4,7 +4,7 @@ import { request } from './api'
 import { GuidancePanel } from './GuidancePanel'
 import type { Capture, CaseContext, CopilotResult, Cycle, Outcome } from './types'
 
-const initialContext: CaseContext = { vehicle: '', material: 'unknown' }
+const caseContext: CaseContext = { vehicle: '', material: 'unknown' }
 const outcomes: { id: Outcome; label: string }[] = [
   { id: 'not_reported', label: 'Let the copilot assess the result' },
   { id: 'not_done', label: 'No correction made' },
@@ -19,7 +19,6 @@ export function App() {
   const [captures, setCaptures] = useState<Capture[]>([])
   const [selectedId, setSelectedId] = useState('')
   const [cycles, setCycles] = useState<Cycle[]>([])
-  const [context, setContext] = useState<CaseContext>(initialContext)
   const [note, setNote] = useState('')
   const [outcome, setOutcome] = useState<Outcome>('not_reported')
   const [busy, setBusy] = useState(false)
@@ -102,7 +101,7 @@ export function App() {
     controller.current = abort
     setBusy(true)
     setError('')
-    const submittedContext = { ...context }
+    const submittedContext = { ...caseContext }
     const baseline =
       previous ?? captures.find((item) => item.id === selectedCycle?.previousCaptureId)
     const submittedNote = previousCycle ? note.trim() : (selectedCycle?.actionNote ?? '')
@@ -154,7 +153,6 @@ export function App() {
           ? items.map((item) => (item.id === selectedCycle.id ? cycle : item))
           : [...items, cycle],
       )
-      setContext(submittedContext)
       setNote('')
       setOutcome('not_reported')
       setShowPrevious(false)
@@ -174,7 +172,7 @@ export function App() {
     const payload = {
       version: 3,
       sessionId: sessionId.current,
-      context,
+      context: caseContext,
       photos: captures.map(({ id, title, timestamp }) => ({ id, title, timestamp })),
       cycles,
     }
@@ -208,39 +206,6 @@ export function App() {
           <h1>Assess. Adjust. Reassess.</h1>
           <span className="prototype-label">Photo-guided prototype</span>
         </div>
-        <details className="case-setup">
-          <summary>Vehicle details, optional</summary>
-          <div className="setup-fields">
-            <label>
-              Vehicle
-              <input
-                value={context.vehicle}
-                maxLength={100}
-                placeholder="e.g. Rivian R1S, model year"
-                disabled={busy}
-                onChange={(event) => setContext({ ...context, vehicle: event.target.value })}
-              />
-            </label>
-            <label>
-              Panel material
-              <select
-                value={context.material}
-                disabled={busy}
-                onChange={(event) =>
-                  setContext({
-                    ...context,
-                    material: event.target.value as CaseContext['material'],
-                  })
-                }
-              >
-                <option value="unknown">Not confirmed</option>
-                <option value="steel">Steel</option>
-                <option value="aluminum">Aluminum</option>
-                <option value="other">Other</option>
-              </select>
-            </label>
-          </div>
-        </details>
         {configured === false && (
           <p className="error">
             AI guidance needs OPENCODE_API_KEY in the backend .env file. Add it and restart the
